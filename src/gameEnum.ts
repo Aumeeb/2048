@@ -2,10 +2,12 @@
  *  You can choose one of all difficult to start game , each difficult has different cells
  */
 export enum Difficult {
-    /** has 8 * 8 cells */
-    Easy,
+    /** has 3 * 3 cells */
+    Kids,
     /** has 4 * 4 cells */
     Normal,
+    /** has 8 * 8 cells */
+    Easy,
     /** has 16 * 16 cells */
     Hard,
     /** has 32 * 32 cells */

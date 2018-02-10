@@ -1,5 +1,6 @@
 ﻿import * as  System from "./gameEnum";
 import { ColorPan } from './colorPan'
+import { randomNum, combinationTiles } from './tools'
 
 interface Size {
     /** 横向有多少个方块 */
@@ -34,8 +35,9 @@ class GCC {
     /**棋盘格 */
     static tableSize: Size = { rows: 0, columns: 0, count: () => GCC.tableSize.rows * GCC.tableSize.columns }
     static history: Step[] = [];
+    static curStep = history.length;
 
-
+    score: number = 0;
     // //根据难度计算出的来行数
     // canInput: boolean = true;
     // curInputValue: System.Direction = System.Direction.Nothing;
@@ -67,7 +69,7 @@ class Player {
 
 }
 
-class Tile {
+export class Tile {
     /**
  * 瓦片
  */
@@ -110,14 +112,12 @@ class Tile {
     left: number = 0;
 
     currentRowIndex(): number {
-        return this.index / Constpoint.col;
+        return this.index / GCC.tableSize.columns
     }
     currentColIndex(): number {
-        return this.index % Constpoint.col;
+        return this.index % GCC.tableSize.columns
     }
-    currentTableSize(): Table {
-        return Constpoint;
-    }
+
     isEmpty(): boolean {
         if (this.value == 0)
             return true
@@ -140,37 +140,25 @@ class Tile {
         }
     }
 }
-class Table {
-    col: number;
-    row: number;
-    constructor(col: number, row: number) {
-        this.col = col;
-        this.row = row;
-    }
-    // constructor(public col: number,public row: number) {}
-}
-//公开难度
-var Constpoint: Table;
+ 
+ 
+
 type TileSquare = Array<Array<Tile>>;
 class Main {
     gameStep: number = 1;
     history: Map<number, TileSquare>
     inputable: boolean = true
     canAnim: boolean = true;
-    Name = "GameObject";
     uIRender: UIRender;
-    score: number = 0;
-
     table: TileSquare;
     cellArray = new Array<Tile>();
-    diff: System.Difficult | undefined;
-    width: number = 0
-    height: number = 0
+    
     //开局生成随机多少个瓦片
     ranTileCount = 2;  //有bug 可能生成的元素会在同一个坐标上🐷
     //总数
     public tilesCount: number;
     constructor(difficult: System.Difficult) {
+
         this.setDifficult(difficult);
         this.table = [];
         GCC.canvas.tabIndex = 100;
@@ -178,7 +166,7 @@ class Main {
         this.history = new Map<number, TileSquare>();
         this.uIRender = new UIRender(GCC.canvas, this);
         this.init();
-        this.uIRender.createBackGroundTail(this.width, this.height, GCC.tableSize.rows, GCC.tableSize.columns, "div");
+        this.uIRender.createBackGroundTail(GCC.canvasWidth, GCC.canvasHeight, GCC.tableSize.rows, GCC.tableSize.columns, "div");
         GCC.canvas.onkeydown = (e) => {
             if (this.inputable) {
                 switch (e.keyCode) {//判断e.indexCode
@@ -200,9 +188,9 @@ class Main {
                     case 39:
                         console.log("右");
                         if (this.canAnim) {
-                            MathLogic.group(this.table, System.Direction.Right)
+                            combinationTiles(this.table, System.Direction.Right)
                             this.cellArray.forEach((ele) => {
-                                this.uIRender.TailMove(ele, System.Direction.Right);
+                                this.uIRender.moveTile(ele, System.Direction.Right);
                             });
                         }
                         this.uIRender.createNewOne(this.cellArray);
@@ -220,12 +208,16 @@ class Main {
 
         GCC.canvas.onmouseover = this.mouseOver;
     }
+    /**选择难度 */
     setDifficult(diff: System.Difficult): void {
 
         const sideLenOfCell: number = 4;
         let finalSideLenOfCell = 4;
 
         switch (diff) {
+            case System.Difficult.Kids:
+                finalSideLenOfCell = 3
+                break;
             case System.Difficult.Easy:
                 finalSideLenOfCell = sideLenOfCell << 1;
                 break;
@@ -241,7 +233,7 @@ class Main {
         }
         GCC.tableSize.rows = finalSideLenOfCell;
         GCC.tableSize.columns = finalSideLenOfCell;
-        Constpoint = new Table(finalSideLenOfCell, finalSideLenOfCell);
+        // Constpoint = new Table(finalSideLenOfCell, finalSideLenOfCell);
     }
     copyTileSquare(source: TileSquare): TileSquare {
         let target = new Array<Array<Tile>>(GCC.tableSize.rows);
@@ -280,8 +272,7 @@ class Main {
         return table
     }
     init(): void {
-        this.width = GCC.canvasWidth;
-        this.height = GCC.canvasHeight;
+ 
 
 
         this.table = new Array<Array<Tile>>(GCC.tableSize.rows);
@@ -316,7 +307,7 @@ class Main {
         //设置初始化瓦片索引和值      
         for (let i = 0; i < this.ranTileCount; i++) {
             //开始创建2个随机的数字 2或者4
-            let tileIndex = MathLogic.createRandom(this.tilesCount);
+            let tileIndex = randomNum(this.tilesCount);
             let tileValue = this.createNumber2or4();
             let cell = this.cellArray[tileIndex];
 
@@ -335,7 +326,7 @@ class Main {
         // console.dir(this.tilesCount);
         this.cellArray.forEach((tile) => {
             if (tile.value > 0) {
-                this.uIRender.createTail(GCC.tableSize.rows, GCC.tableSize.columns, tile);
+                this.uIRender.createTile(GCC.tableSize.rows, GCC.tableSize.columns, tile);
             }
         })
 
@@ -344,53 +335,14 @@ class Main {
     * 创建随机数字 2 or 4
     */
     createNumber2or4(): number {
-        var ran = MathLogic.createRandom(10);
+        var ran = randomNum(10);
         var beginRan = ran % 2 == 0 ? 2 : 4;
         return beginRan;
     }
 
 
 }
-class MathLogic {
-    public static group(tileSquare: Tile[][], dir: System.Direction): Tile[][] {
 
-        if (dir == System.Direction.Right) {
-            tileSquare.forEach(tileArray => {
-                let isNotComputed = true
-                //实现思路 从每一个行最右边依次向最左边拿"元素" 每个拿到的元素会和它自身右边的元素相乘
-                for (let i = tileArray.length - 2; i >= 0; i--) {
-                    //如果元素自身是空 就不管它
-                    if (tileArray[i].value == 0)
-                        continue;
-
-                    //元素自动向右移动 直到最右边为止
-                    let tileIndex = i
-                    while (tileArray[tileIndex + 1].value == 0 && tileIndex < tileArray.length) {
-                        tileArray[tileIndex + 1].value = tileArray[tileIndex].value
-                        tileArray[tileIndex].value = 0;
-                        tileIndex++
-                        if (tileIndex == tileArray.length - 1)
-                            break;
-                    }
-
-                    //如果当前的元素和它右边相邻的元素一样 就可以相乘
-                    if (isNotComputed) {
-                        if (tileArray[i].value == tileArray[i + 1].value) {
-                            tileArray[i + 1].value **= 2
-                            tileArray[i].value = 0
-                        }
-                        isNotComputed = false
-                    }
-
-                }
-            })
-        }
-        return tileSquare
-    }
-    public static createRandom(n: number): number {
-        return Math.floor(Math.random() * n);
-    }
-}
 class Animation {
     private static linear(t: number, b: number, c: number, d: number): number {
         return c * t / d + b;
@@ -488,15 +440,6 @@ class UIRender {
         this.canvasStyle();
     }
 
-
-
-    randomRGB(): string {
-        let Max = 2 << 7 - 1;
-        let R = MathLogic.createRandom(Max);
-        let G = MathLogic.createRandom(Max);
-        let B = MathLogic.createRandom(Max);
-        return `RGB(${R},${G},${B})`;
-    }
     private backgroundSkin(): void {
         this.canvas.style.backgroundColor = ColorPan.backgroundDivBig;
         this.canvas.style.margin = "auto";
@@ -541,16 +484,15 @@ class UIRender {
                 emptyIndexArray.push(i)
         }
         //选出用可用的下标
-        let ranIndex = MathLogic.createRandom(emptyIndexArray.length);
+        let ranIndex = randomNum(emptyIndexArray.length);
         let availableIndex = emptyIndexArray[ranIndex]
         cellArray[availableIndex].value = 2
-        this.createTail(GCC.tableSize.rows, GCC.tableSize.columns, cellArray[availableIndex])
+        this.createTile(GCC.tableSize.rows, GCC.tableSize.columns, cellArray[availableIndex])
     }
     public update(previous: TileSquare, next: TileSquare): Boolean {
-
         return true;
     }
-    public createTail(row: number, col: number, tile: Tile
+    public createTile(row: number, col: number, tile: Tile
         , ): HTMLDivElement {
         if (tile == null) {
             console.log("dict is null")
@@ -597,7 +539,7 @@ class UIRender {
 
         return eleDiv;
     }
-    TailMove(tile: Tile, dir: System.Direction): void {
+    moveTile(tile: Tile, dir: System.Direction): void {
         let frameRate: number = 60;
         if (tile) {
             if (dir != null) {
@@ -610,7 +552,7 @@ class UIRender {
                 }
                 if (dir == System.Direction.Right) {
                     var tileWidth = tile.width + tile.borderWidth;
-                    Animation.BeginAnim(0, tile.left, (tileWidth * (tile.currentTableSize().col - 1)) - (tileWidth * tile.currentColIndex()), frameRate, System.AnimationType.linear, tile.own);
+                    Animation.BeginAnim(0, tile.left, (tileWidth * (GCC.tableSize.rows - 1)) - (tileWidth * tile.currentColIndex()), frameRate, System.AnimationType.linear, tile.own);
                     setTimeout(() => {
                         tile.update();
                     }, GCC.animDuration);
@@ -627,7 +569,7 @@ class UIRender {
 
 
 
-let game = new Main(System.Difficult.Easy);
+let game = new Main(System.Difficult.Kids);
 game.start();
 
 
