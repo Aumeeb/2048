@@ -2,32 +2,60 @@
 import { ColorPan } from './colorPan'
 
 interface Size {
+    /** 横向有多少个方块 */
     rows: number;
+    /** 竖向有多少个方块   */
     columns: number;
-    /** rows * columns =  */
+    /** 横向和竖向方块的总数量  */
     count: () => number;
 }
-/** Game control center ! */
+/** 历史数据 */
+interface History {
+    curInputValue: System.Direction;
+    preInputValue: System.Direction;
+    historyInputValueList: System.Direction[];
+    curData: number[]
+    historyData: Map<number, number[]>;
+    to2DArray?: () => number[][]
+
+}
+/** Game control center 游戏控制 ! */
 class GCC {
     /**画板 */
     static readonly canvas = document.getElementById('d') as HTMLDivElement
-    static readonly animDuration: number = 100
+    /**画板上内边距 */
+    static readonly canvasPaddingTop: number = 300
+    /**画板宽度 */
     static readonly canvasWidth: number = 1200
+    /**画板高度 */
     static readonly canvasHeight: number = 1200
-    static readonly bodyPaddingTop: number = 300
+    /**动画持续时间 */
+    static readonly animDuration: number = 100
+    /**棋盘格 */
     static tableSize: Size = { rows: 0, columns: 0, count: () => GCC.tableSize.rows * GCC.tableSize.columns }
-    //根据难度计算出的来行数
 
+    static history: History = {
+        curInputValue: System.Direction.Nothing,
+        preInputValue: System.Direction.Nothing,
+        historyInputValueList:[],
+        curData:[],
+        historyData: new Map()
+    }
+    //根据难度计算出的来行数
+    canInput: boolean = true;
+    curInputValue: System.Direction = System.Direction.Nothing;
+    preInputValue: System.Direction = System.Direction.Nothing;
+    historyInputValueList: Array<System.Direction> = new Array<System.Direction>();
 }
+
 
 /**
  * record users behaviour and operation state 
  */
 class Player {
-    canInput: boolean = true;
-    curInputValue?: System.Direction
-    preInputValue?: System.Direction
-    historyInputValueList: Array<System.Direction> = new Array<System.Direction>();
+
+
+
     constructor(canvas: HTMLElement) {
         canvas.addEventListener('mouseup', (ev) => {
             console.log('already clicked')
@@ -261,11 +289,11 @@ class Main {
         this.height = GCC.canvasHeight;
 
 
-        this.table = new Array<Array<Tile>>( GCC.tableSize.rows);
+        this.table = new Array<Array<Tile>>(GCC.tableSize.rows);
         let tab = 0;
         //设置 棋盘格初始化数据
-        for (let i = 0; i <  GCC.tableSize.rows; i++) {
-            let array1 = new Array<Tile>( GCC.tableSize.columns);
+        for (let i = 0; i < GCC.tableSize.rows; i++) {
+            let array1 = new Array<Tile>(GCC.tableSize.columns);
             for (var j = 0; j < array1.length; j++) {
                 array1[j] = new Tile();
                 array1[j].index = tab;
@@ -312,7 +340,7 @@ class Main {
         // console.dir(this.tilesCount);
         this.cellArray.forEach((tile) => {
             if (tile.value > 0) {
-                this.uIRender.createTail( GCC.tableSize.rows, GCC.tableSize.columns, tile);
+                this.uIRender.createTail(GCC.tableSize.rows, GCC.tableSize.columns, tile);
             }
         })
 
@@ -444,7 +472,7 @@ class UIRender {
     }
     private bodyStyle(): void {
         var body = document.getElementsByTagName('body').item(0);
-        body.style.paddingTop = this.toPx(GCC.bodyPaddingTop);
+        body.style.paddingTop = this.toPx(GCC.canvasPaddingTop);
         body.style.opacity = '0.9';
         body.style.backgroundImage = 'url(./img/huge2.jpg)';
     }
@@ -606,6 +634,6 @@ class UIRender {
 
 let game = new Main(System.Difficult.Easy);
 game.start();
-    
+
 
 

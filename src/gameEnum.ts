@@ -21,7 +21,8 @@ export enum Direction {
     Left,
     Up,
     Down,
-    Right
+    Right,
+    Nothing,
 }
 /**
  *there are some beaufully color  
