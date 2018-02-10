@@ -1,5 +1,6 @@
 import { Tile } from "./index";
 import * as  System from "./gameEnum";
+import { create } from "domain";
 
 export function randomNum(n: number): number {
     return Math.floor(Math.random() * n);
@@ -47,3 +48,21 @@ export function combinationTiles(tileSquare: Tile[][], dir: System.Direction): T
     }
     return tileSquare
 }
+/**创建初始数据 */
+export function initCreateTiles(length: number, count: number, valuesRange: number[] = [2, 4]): number[] {
+    let pushCount = 0
+    let result: number[] = [];
+    for (let i = 0; i < length; i++) {
+        result.push(0)
+    }
+    while (pushCount < count) {
+        var ranNum = randomNum(length)
+        if (result[ranNum] == 0) {
+            result[ranNum] = valuesRange[ranNum % valuesRange.length]
+            pushCount++;
+        }
+
+    }
+    return result;
+}
+

@@ -1,6 +1,6 @@
 ﻿import * as  System from "./gameEnum";
 import { ColorPan } from './colorPan'
-import { randomNum, combinationTiles } from './tools'
+import { randomNum, combinationTiles, initCreateTiles } from './tools'
 
 interface Size {
     /** 横向有多少个方块 */
@@ -13,7 +13,7 @@ interface Size {
 Window
 /** 历史数据 */
 interface Step {
-    new(): Step;
+    new?(): Step;
     index: number;
     curInputValue: System.Direction;
     curData: number[]
@@ -140,33 +140,29 @@ export class Tile {
         }
     }
 }
- 
- 
+
+
 
 type TileSquare = Array<Array<Tile>>;
 class Main {
-    gameStep: number = 1;
     history: Map<number, TileSquare>
     inputable: boolean = true
     canAnim: boolean = true;
     uIRender: UIRender;
     table: TileSquare;
     cellArray = new Array<Tile>();
-    
+
     //开局生成随机多少个瓦片
     ranTileCount = 2;  //有bug 可能生成的元素会在同一个坐标上🐷
-    //总数
-    public tilesCount: number;
+
     constructor(difficult: System.Difficult) {
 
         this.setDifficult(difficult);
         this.table = [];
-        GCC.canvas.tabIndex = 100;
-        this.tilesCount = GCC.tableSize.count()
+
         this.history = new Map<number, TileSquare>();
-        this.uIRender = new UIRender(GCC.canvas, this);
+        this.uIRender = new UIRender(GCC.canvas);
         this.init();
-        this.uIRender.createBackGroundTail(GCC.canvasWidth, GCC.canvasHeight, GCC.tableSize.rows, GCC.tableSize.columns, "div");
         GCC.canvas.onkeydown = (e) => {
             if (this.inputable) {
                 switch (e.keyCode) {//判断e.indexCode
@@ -208,7 +204,7 @@ class Main {
 
         GCC.canvas.onmouseover = this.mouseOver;
     }
-    /**选择难度 */
+
     setDifficult(diff: System.Difficult): void {
 
         const sideLenOfCell: number = 4;
@@ -250,7 +246,7 @@ class Main {
         var newCur = this.copyTileSquare(cur);
 
 
-        this.history.set(this.gameStep++, newCur)
+        this.history.set(GCC.curStep++, newCur)
         this.history.forEach((v, k) => {
 
             console.log("round " + k)
@@ -272,9 +268,11 @@ class Main {
         return table
     }
     init(): void {
- 
 
-
+        // ----------------------------------------------------------------
+        var initRecord = initCreateTiles(GCC.tableSize.count(), 2);
+        GCC.history.push({ index: 0, curData: initRecord, curInputValue: System.Direction.Nothing });
+        // ----------------------------------------------------------------
         this.table = new Array<Array<Tile>>(GCC.tableSize.rows);
         let tab = 0;
         //设置 棋盘格初始化数据
@@ -307,13 +305,14 @@ class Main {
         //设置初始化瓦片索引和值      
         for (let i = 0; i < this.ranTileCount; i++) {
             //开始创建2个随机的数字 2或者4
-            let tileIndex = randomNum(this.tilesCount);
+            let tileIndex = randomNum(GCC.tableSize.count());
             let tileValue = this.createNumber2or4();
             let cell = this.cellArray[tileIndex];
 
             cell.value = tileValue;
         }
         this.recordHistory(this.toTable(this.cellArray));
+
 
     }
     mouseOver(mouse: MouseEvent): void {
@@ -430,23 +429,23 @@ class UIRender {
     /**
      * 最外层的div容器
      */
-    private canvas: HTMLDivElement;
-    private game: Main
-    constructor(canvas: HTMLDivElement, game: Main) {
-        this.game = game
-        this.canvas = canvas;
+    private c: HTMLDivElement;
+    constructor(c: HTMLDivElement) {
+        this.c = c;
+        this.c.tabIndex = 100;
         this.backgroundSkin();
         this.bodyStyle();
         this.canvasStyle();
+        this.createBackGroundTail(GCC.canvasWidth, GCC.canvasHeight, GCC.tableSize.rows, GCC.tableSize.columns, "div");
     }
 
     private backgroundSkin(): void {
-        this.canvas.style.backgroundColor = ColorPan.backgroundDivBig;
-        this.canvas.style.margin = "auto";
-        this.canvas.style.position = "relative";
-        this.canvas.style.borderRadius = this.toPx(6)
+        this.c.style.backgroundColor = ColorPan.backgroundDivBig;
+        this.c.style.margin = "auto";
+        this.c.style.position = "relative";
+        this.c.style.borderRadius = this.toPx(6)
     }
-    public createBackGroundTail(canvasWidth: number, canvasHeight: number, row: number, col: number, eleName: string): void {
+    private createBackGroundTail(canvasWidth: number, canvasHeight: number, row: number, col: number, eleName: string): void {
 
         let borderWidth = canvasWidth * (1 / 6);
         let borderHeight = canvasHeight * (1 / 6);
@@ -471,7 +470,7 @@ class UIRender {
             let y = singleborderHeight + (singleborderHeight + height) * (Math.floor(i / col));
             element.style.top = this.toPx(y);
 
-            this.canvas.appendChild(element);
+            this.c.appendChild(element);
 
         }
     }
@@ -535,7 +534,7 @@ class UIRender {
         a.style.fontSize = this.toPx(height / 2.5);
         a.innerText = tile.value.toString();
         eleDiv.appendChild(a);
-        this.canvas.appendChild(eleDiv);
+        this.c.appendChild(eleDiv);
 
         return eleDiv;
     }
