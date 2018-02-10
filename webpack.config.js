@@ -1,7 +1,10 @@
 "use strict";
 exports.__esModule = true;
 var path = require("path");
-var devOption_1 = require("./server/devOption");
+var HtmlWebpackPlugin = require("html-webpack-plugin");
+var autotruck_1 = require("./src/server/autotruck");
+var devOption_1 = require("./src/server/devOption");
+autotruck_1.copyResources();
 var config = {
     devtool: 'source-map',
     entry: ['./src/index.ts'],
@@ -18,6 +21,12 @@ var config = {
             { test: /\.ts$/, loader: 'ts-loader' },
         ]
     },
+    plugins: [
+        new HtmlWebpackPlugin({
+            filename: './index.html',
+            template: './src/index.html'
+        })
+    ],
     devServer: {
         contentBase: path.resolve(__dirname, devOption_1.dev.outputFolder),
         host: devOption_1.dev.innerIP,
