@@ -25,6 +25,6 @@ enum Difficult {
 }
 ```
 
-game snapshot
+# game snapshot
 <img src='/src/gitResource/16.png'>
 <img src='/src/gitResource/32.png'>
