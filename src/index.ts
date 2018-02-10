@@ -9,13 +9,13 @@ interface Size {
     /** 横向和竖向方块的总数量  */
     count: () => number;
 }
+Window
 /** 历史数据 */
-interface History {
+interface Step {
+    new(): Step;
+    index: number;
     curInputValue: System.Direction;
-    preInputValue: System.Direction;
-    historyInputValueList: System.Direction[];
     curData: number[]
-    historyData: Map<number, number[]>;
     to2DArray?: () => number[][]
 
 }
@@ -33,19 +33,14 @@ class GCC {
     static readonly animDuration: number = 100
     /**棋盘格 */
     static tableSize: Size = { rows: 0, columns: 0, count: () => GCC.tableSize.rows * GCC.tableSize.columns }
+    static history: Step[] = [];
 
-    static history: History = {
-        curInputValue: System.Direction.Nothing,
-        preInputValue: System.Direction.Nothing,
-        historyInputValueList:[],
-        curData:[],
-        historyData: new Map()
-    }
-    //根据难度计算出的来行数
-    canInput: boolean = true;
-    curInputValue: System.Direction = System.Direction.Nothing;
-    preInputValue: System.Direction = System.Direction.Nothing;
-    historyInputValueList: Array<System.Direction> = new Array<System.Direction>();
+
+    // //根据难度计算出的来行数
+    // canInput: boolean = true;
+    // curInputValue: System.Direction = System.Direction.Nothing;
+    // preInputValue: System.Direction = System.Direction.Nothing;
+    // historyInputValueList: Array<System.Direction> = new Array<System.Direction>();
 }
 
 
