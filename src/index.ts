@@ -60,8 +60,8 @@ class ColorPan {
  */
 class Player {
     canInput: boolean = true;
-    curInputValue: Direction
-    preInputValue: Direction
+    curInputValue?: Direction
+    preInputValue?: Direction
     historyInputValueList: Array<Direction> = new Array<Direction>();
     nextStep = (dir: Direction) => {
 
@@ -79,6 +79,13 @@ class Player {
 }
 
 class Tile {
+    /**
+ * 瓦片
+ */
+    own: HTMLDivElement
+    constructor() {
+        this.own= document.createElement('div'); //初始化
+    }
 
     /**
   * 索引
@@ -128,21 +135,20 @@ class Tile {
         else
             return false
     }
-    /**
- * 瓦片
- */
-    own: HTMLDivElement;
+
 
     //更新
     update(): void {
-        if (this.own.style.left)
-            this.left = parseInt(this.own.style.left);
-        if (this.own.style.top)
-            this.top = parseInt(this.own.style.top);
-        if (this.own.style.right)
-            this.top = parseInt(this.own.style.right);
-        if (this.own.style.bottom)
-            this.top = parseInt(this.own.style.bottom);
+        if (this.own != undefined) {
+            if (this.own.style.left)
+                this.left = parseInt(this.own.style.left);
+            if (this.own.style.top)
+                this.top = parseInt(this.own.style.top);
+            if (this.own.style.right)
+                this.top = parseInt(this.own.style.right);
+            if (this.own.style.bottom)
+                this.top = parseInt(this.own.style.bottom);
+        }
     }
 }
 class Table {
@@ -158,8 +164,6 @@ class Table {
 var Constpoint: Table;
 type TileSquare = Array<Array<Tile>>;
 class Game {
-
-
     gameStep: number = 1;
     history: Map<number, TileSquare>
     inputable: boolean = true
@@ -168,21 +172,21 @@ class Game {
     uIRender: UIRender;
     score: number;
     canvas: HTMLDivElement;
-    row: number;
-    col: number;
+    row: number = 0
+    col: number = 0
     table: TileSquare;
     cellArray = new Array<Tile>();
-    diff: Difficult;
-    width: number;
-    height: number;
+    diff: Difficult | undefined;
+    width: number = 0
+    height: number = 0
     //开局生成随机多少个瓦片
     ranTileCount = 2;  //有bug 可能生成的元素会在同一个坐标上🐷
     //总数
     public tilesCount: number;
     constructor(canvas: HTMLDivElement, difficult: Difficult) {
-
+        this.table = [];
         this.setDifficult(difficult);
-
+        this.score = 0;
         this.canvas = canvas;
         this.canvas.tabIndex = 100;
         this.tilesCount = this.row * this.col;

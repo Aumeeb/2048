@@ -4,19 +4,18 @@ var path = require("path");
 var devOption_1 = require("./server/devOption");
 var config = {
     devtool: 'source-map',
-    entry: ['./src/index.tsx'],
+    entry: ['./src/index.ts'],
     output: {
         path: path.resolve(__dirname, devOption_1.dev.outputFolder),
         filename: 'bundle.js'
     },
     resolve: {
         // Add `.ts` and `.tsx` as a resolvable extension.
-        extensions: ['*', '.ts', '.js', '.tsx']
+        extensions: ['*', '.ts', '.js']
     },
     module: {
         loaders: [
             { test: /\.ts$/, loader: 'ts-loader' },
-            { test: /\.tsx$/, loader: 'babel-loader!ts-loader' },
         ]
     },
     devServer: {

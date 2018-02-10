@@ -11,7 +11,7 @@ import { dev } from './server/devOption'
  
 const config: webpack.Configuration = {
     devtool: 'source-map',
-    entry: ['./src/index.tsx'],
+    entry: ['./src/index.ts'],
     
     output: {
         path: path.resolve(__dirname, dev.outputFolder), //获取当前路径
@@ -19,14 +19,12 @@ const config: webpack.Configuration = {
     },
     resolve: {
         // Add `.ts` and `.tsx` as a resolvable extension.
-        extensions: ['*', '.ts', '.js','.tsx']
+        extensions: ['*', '.ts', '.js']
     },
 
     module: {
         loaders: [
             { test: /\.ts$/, loader: 'ts-loader' },
-            { test: /\.tsx$/, loader:  'babel-loader!ts-loader' },
-        
         ],
 
     },
