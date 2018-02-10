@@ -1,6 +1,6 @@
 ﻿import * as  System from "./gameEnum";
 import { ColorPan } from './colorPan'
-import { randomNum, combinationTiles, initCreateTiles } from './tools'
+import { randomNum, combinationTiles, initCreateTiles, combinationTiles2, convert2D, } from './tools'
 
 interface Size {
     /** 横向有多少个方块 */
@@ -34,6 +34,7 @@ class GCC {
     static readonly animDuration: number = 100
     /**棋盘格 */
     static tableSize: Size = { rows: 0, columns: 0, count: () => GCC.tableSize.rows * GCC.tableSize.columns }
+
     static history: Step[] = [];
     static curStep = history.length;
 
@@ -43,6 +44,11 @@ class GCC {
     // curInputValue: System.Direction = System.Direction.Nothing;
     // preInputValue: System.Direction = System.Direction.Nothing;
     // historyInputValueList: Array<System.Direction> = new Array<System.Direction>();
+    static addRecord(record: Step) {
+        GCC.history.push(record);
+        console.log(record.index)
+        console.log(record.curData)
+    }
 }
 
 
@@ -164,6 +170,7 @@ class Main {
         this.uIRender = new UIRender(GCC.canvas);
         this.init();
         GCC.canvas.onkeydown = (e) => {
+            var preData=GCC.history[GCC.history.length - 1].curData;
             if (this.inputable) {
                 switch (e.keyCode) {//判断e.indexCode
                     //是37: 就左移
@@ -188,6 +195,8 @@ class Main {
                             this.cellArray.forEach((ele) => {
                                 this.uIRender.moveTile(ele, System.Direction.Right);
                             });
+                            var d2= convert2D(preData,GCC.tableSize.rows);
+                            combinationTiles2(d2, System.Direction.Right)
                         }
                         this.uIRender.createNewOne(this.cellArray);
                         break;
@@ -247,11 +256,8 @@ class Main {
 
 
         this.history.set(GCC.curStep++, newCur)
-        this.history.forEach((v, k) => {
 
-            console.log("round " + k)
-            console.log(v)
-        })
+
     }
     toTable(cur: Tile[]): TileSquare {
         let table = new Array<Array<Tile>>(GCC.tableSize.rows);
@@ -271,7 +277,7 @@ class Main {
 
         // ----------------------------------------------------------------
         var initRecord = initCreateTiles(GCC.tableSize.count(), 2);
-        GCC.history.push({ index: 0, curData: initRecord, curInputValue: System.Direction.Nothing });
+        GCC.addRecord({ index: 0, curData: initRecord, curInputValue: System.Direction.Nothing });
         // ----------------------------------------------------------------
         this.table = new Array<Array<Tile>>(GCC.tableSize.rows);
         let tab = 0;
