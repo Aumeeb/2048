@@ -3,9 +3,9 @@ The once popular game 2048, now using Typescript, HTML5 Technology
 
 # how to play
 
-#step 1
+# step 1
 npm install
-#step 2 
+# step 2 
 npm run dev
 
 
@@ -24,3 +24,6 @@ enum Difficult {
     Boss
 }
 ```
+
+game snapshot
+<img src='/src/gitResource/16.png'>
