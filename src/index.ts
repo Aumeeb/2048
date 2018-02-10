@@ -18,12 +18,15 @@ class GC {
  *  You can choose one of all difficult to start game , each difficult has different cells
  */
 enum Difficult {
-    // has 8 * 8 cells 
+    /** has 8 * 8 cells */
     Easy,
-    // has 4 * 4 cells 
+    /** has 4 * 4 cells */
     Normal,
+    /** has 16 * 16 cells */
     Hard,
+    /** has 32 * 32 cells */
     Expert,
+    /** has 64 * 64 cells */
     Boss
 }
 /**
@@ -652,7 +655,7 @@ class UIRender {
 
 let canvas = document.getElementById('d') as HTMLDivElement
 if (canvas != null) {
-    let game = new Game(canvas, Difficult.Normal);
+    let game = new Game(canvas, Difficult.Easy);
     game.start();
     let guan = new Player(canvas);
 }
