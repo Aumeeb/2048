@@ -1,6 +1,6 @@
 ﻿import * as  System from "./gameEnum";
 import { ColorPan } from './colorPan'
-import { randomNum, combinationTiles, initCreateTiles, combinationTiles2, convert2D, } from './tools'
+import { randomNum, combinationTiles, initCreateTiles, combinationTiles2, convert1Dto2D, convert2DTo1D, } from './tools'
 
 interface Size {
     /** 横向有多少个方块 */
@@ -14,7 +14,7 @@ Window
 /** 历史数据 */
 interface Step {
     new?(): Step;
-    index: number;
+    index?: number;
     curInputValue: System.Direction;
     curData: number[]
     to2DArray?: () => number[][]
@@ -45,6 +45,7 @@ class GCC {
     // preInputValue: System.Direction = System.Direction.Nothing;
     // historyInputValueList: Array<System.Direction> = new Array<System.Direction>();
     static addRecord(record: Step) {
+        record.index = GCC.curStep;
         GCC.history.push(record);
         console.log(record.index)
         console.log(record.curData)
@@ -170,22 +171,21 @@ class Main {
         this.uIRender = new UIRender(GCC.canvas);
         this.init();
         GCC.canvas.onkeydown = (e) => {
-            var preData=GCC.history[GCC.history.length - 1].curData;
+            var preData = GCC.history[GCC.history.length - 1].curData;
+            var d2 = convert1Dto2D(preData, GCC.tableSize.rows);
             if (this.inputable) {
                 switch (e.keyCode) {//判断e.indexCode
                     //是37: 就左移
                     case 37:
                         console.log("左");
-                        // if (this.canAnim) {
-                        //     this.cellArray.forEach((ele) => {
-                        //         this.uIRender.TailMove(ele, System.Direction.Left);
-                        //     });
-                        // }
-                        //有问题.
+                        var newData = convert2DTo1D(combinationTiles2(d2, System.Direction.Left))
+                        GCC.addRecord({ curData: newData, curInputValue: System.Direction.Left });
                         break;
                     //是38: 就上移
                     case 38:
                         console.log("上");
+                        var newData = convert2DTo1D(combinationTiles2(d2, System.Direction.Up))
+                        GCC.addRecord({ curData: newData, curInputValue: System.Direction.Up });
                         break;
                     //是39: 就右移
                     case 39:
@@ -195,14 +195,17 @@ class Main {
                             this.cellArray.forEach((ele) => {
                                 this.uIRender.moveTile(ele, System.Direction.Right);
                             });
-                            var d2= convert2D(preData,GCC.tableSize.rows);
-                            combinationTiles2(d2, System.Direction.Right)
+                         
+                            var newData = convert2DTo1D(combinationTiles2(d2, System.Direction.Right))
+                            GCC.addRecord({ curData: newData, curInputValue: System.Direction.Right });
                         }
                         this.uIRender.createNewOne(this.cellArray);
                         break;
                     //是40: 就下移
                     case 40:
                         console.log("下");
+                        var newData = convert2DTo1D(combinationTiles2(d2, System.Direction.Down))
+                        GCC.addRecord({ curData: newData, curInputValue: System.Direction.Down });
                         break;
                     default:
                         console.log(e.code);
@@ -277,7 +280,7 @@ class Main {
 
         // ----------------------------------------------------------------
         var initRecord = initCreateTiles(GCC.tableSize.count(), 2);
-        GCC.addRecord({ index: 0, curData: initRecord, curInputValue: System.Direction.Nothing });
+        GCC.addRecord({  curData: initRecord, curInputValue: System.Direction.Nothing });
         // ----------------------------------------------------------------
         this.table = new Array<Array<Tile>>(GCC.tableSize.rows);
         let tab = 0;

@@ -27,7 +27,7 @@ export function convert1Dto2D(cur: number[], rows: number): number[][] {
     return table
 }
 export function convert2DTo1D(cur: number[][]): number[] {
-    
+
     var rows = cur.length;
     var cols = cur[0].length
     var result: number[] = [];
@@ -74,40 +74,71 @@ export function combinationTiles(tileSquare: Tile[][], dir: System.Direction): T
     return tileSquare
 }
 
-export function combinationTiles2(tileSquare: number[][], dir: System.Direction): number[] {
+export function combinationTiles2(table: number[][], dir: System.Direction): number[][] {
 
     if (dir == System.Direction.Right) {
-        tileSquare.forEach(tileArray => {
+        table.forEach(tileArray => {
             let isNotComputed = true
             //实现思路 从每一个行最右边依次向最左边拿"元素" 每个拿到的元素会和它自身右边的元素相乘
             for (let i = tileArray.length - 2; i >= 0; i--) {
                 //如果元素自身是空 就不管它
-                if (tileArray[i].value == 0)
+                if (tileArray[i] == 0)
                     continue;
 
                 //元素自动向右移动 直到最右边为止
                 let tileIndex = i
-                while (tileArray[tileIndex + 1].value == 0 && tileIndex < tileArray.length) {
-                    tileArray[tileIndex + 1].value = tileArray[tileIndex].value
-                    tileArray[tileIndex].value = 0;
+                while (tileArray[tileIndex + 1] == 0 && tileIndex < tileArray.length) {
+                    tileArray[tileIndex + 1] = tileArray[tileIndex]
+                    tileArray[tileIndex] = 0;
                     tileIndex++
                     if (tileIndex == tileArray.length - 1)
                         break;
                 }
-
                 //如果当前的元素和它右边相邻的元素一样 就可以相乘
                 if (isNotComputed) {
-                    if (tileArray[i].value == tileArray[i + 1].value) {
-                        tileArray[i + 1].value **= 2
-                        tileArray[i].value = 0
+                    if (tileArray[i] == tileArray[i + 1]) {
+                        tileArray[i + 1] **= 2
+                        tileArray[i] = 0
                     }
                     isNotComputed = false
                 }
-
             }
         })
+        return table
     }
-    return tileSquare
+    if (dir == System.Direction.Left) {
+        table.forEach(tileArray => {
+            let isNotComputed = true
+            //实现思路 从每一个行最右边依次向最左边拿"元素" 每个拿到的元素会和它自身右边的元素相乘
+            // i=1 表示从左边第二个元素开始
+            for (let i = 1; i <= tileArray.length - 1; i++) {
+                //如果元素自身是空 就不管它
+                if (tileArray[i] == 0)
+                    continue;
+                // 明天在写
+                //元素自动向左移动 直到最左边为止
+                let tileIndex = i
+                while (tileArray[tileIndex + 1] == 0 && tileIndex < tileArray.length) {
+                    tileArray[tileIndex + 1] = tileArray[tileIndex]
+                    tileArray[tileIndex] = 0;
+                    tileIndex++
+                    if (tileIndex == tileArray.length - 1)
+                        break;
+                }
+                //如果当前的元素和它右边相邻的元素一样 就可以相乘
+                if (isNotComputed) {
+                    if (tileArray[i] == tileArray[i + 1]) {
+                        tileArray[i + 1] **= 2
+                        tileArray[i] = 0
+                    }
+                    isNotComputed = false
+                }
+            }
+        })
+        return table
+    }
+
+    return table;
 }
 /**创建初始数据 */
 export function initCreateTiles(length: number, count: number, valuesRange: number[] = [2, 4]): number[] {
