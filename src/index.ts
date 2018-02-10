@@ -1,7 +1,6 @@
-﻿
-/**
- * GameConfig 
- */
+﻿import * as  System from "./gameEnum";
+import { ColorPan } from './colorPan'
+
 class GC {
     static animDuration: number = 100
     static canvasWidth: number = 1200
@@ -15,69 +14,26 @@ class GC {
 }
 
 /**
- *  You can choose one of all difficult to start game , each difficult has different cells
- */
-enum Difficult {
-    /** has 8 * 8 cells */
-    Easy,
-    /** has 4 * 4 cells */
-    Normal,
-    /** has 16 * 16 cells */
-    Hard,
-    /** has 32 * 32 cells */
-    Expert,
-    /** has 64 * 64 cells */
-    Boss
-}
-/**
- * record which direction key has been pressed
- */
-enum Direction {
-    Left,
-    Up,
-    Down,
-    Right
-}
-enum AnimationType {
-    linear,
-    easeIn,
-    easeOut,
-    easeInOut,
-
-}
-/**
- *there are some beaufully color  
- */
-class ColorPan {
-    public static Lv1 = "#cdbfb2";
-    public static Lv2 = "#b89e8e";
-    public static Lv3 = "#f5e280";
-    public static Lv4 = "#ba97aa";
-    public static Lv5 = "#f8a591";
-    public static Lv6 = "#8c6912";
-    public static backgroundDivBig = "#b8ac9e";
-    public static backgroundDivSmall = "#d5cdc2";
-}
-/**
  * record users behaviour and operation state 
  */
 class Player {
     canInput: boolean = true;
-    curInputValue?: Direction
-    preInputValue?: Direction
-    historyInputValueList: Array<Direction> = new Array<Direction>();
-    nextStep = (dir: Direction) => {
+    curInputValue?: System.Direction
+    preInputValue?: System.Direction
+    historyInputValueList: Array<System.Direction> = new Array<System.Direction>();
+    constructor(canvas: HTMLElement) {
+        canvas.addEventListener('mouseup', (ev) => {
+            console.log('already clicked')
+        })
+    }
+
+    nextStep = (dir: System.Direction) => {
 
     }
     preStep = () => {
 
     }
 
-    constructor(canvas: HTMLElement) {
-        canvas.addEventListener('mouseup', (ev) => {
-            console.log('already clicked')
-        })
-    }
 
 }
 
@@ -87,7 +43,7 @@ class Tile {
  */
     own: HTMLDivElement
     constructor() {
-        this.own= document.createElement('div'); //初始化
+        this.own = document.createElement('div'); //初始化
     }
 
     /**
@@ -166,7 +122,7 @@ class Table {
 //公开难度
 var Constpoint: Table;
 type TileSquare = Array<Array<Tile>>;
-class Game {
+class Main {
     gameStep: number = 1;
     history: Map<number, TileSquare>
     inputable: boolean = true
@@ -179,14 +135,14 @@ class Game {
     col: number = 0
     table: TileSquare;
     cellArray = new Array<Tile>();
-    diff: Difficult | undefined;
+    diff: System.Difficult | undefined;
     width: number = 0
     height: number = 0
     //开局生成随机多少个瓦片
     ranTileCount = 2;  //有bug 可能生成的元素会在同一个坐标上🐷
     //总数
     public tilesCount: number;
-    constructor(canvas: HTMLDivElement, difficult: Difficult) {
+    constructor(canvas: HTMLDivElement, difficult: System.Difficult) {
         this.table = [];
         this.setDifficult(difficult);
         this.score = 0;
@@ -205,7 +161,7 @@ class Game {
                         console.log("左");
                         // if (this.canAnim) {
                         //     this.cellArray.forEach((ele) => {
-                        //         this.uIRender.TailMove(ele, Direction.Left);
+                        //         this.uIRender.TailMove(ele, System.Direction.Left);
                         //     });
                         // }
                         //有问题.
@@ -218,9 +174,9 @@ class Game {
                     case 39:
                         console.log("右");
                         if (this.canAnim) {
-                            MathLogic.group(this.table, Direction.Right)
+                            MathLogic.group(this.table, System.Direction.Right)
                             this.cellArray.forEach((ele) => {
-                                this.uIRender.TailMove(ele, Direction.Right);
+                                this.uIRender.TailMove(ele, System.Direction.Right);
                             });
                         }
                         this.uIRender.createNewOne(this.cellArray);
@@ -238,28 +194,28 @@ class Game {
 
         this.canvas.onmouseover = this.mouseOver;
     }
-    setDifficult(diff: Difficult): void {
+    setDifficult(diff: System.Difficult): void {
         let sideLenOfCell: number = 4;
 
 
         switch (diff) {
-            case Difficult.Normal:
+            case System.Difficult.Normal:
                 this.row = sideLenOfCell;
                 this.col = sideLenOfCell;
                 break;
-            case Difficult.Easy:
+            case System.Difficult.Easy:
                 this.row = sideLenOfCell << 1;
                 this.col = sideLenOfCell << 1;
                 break;
-            case Difficult.Hard:
+            case System.Difficult.Hard:
                 this.row = sideLenOfCell << 2;
                 this.col = sideLenOfCell << 2;
                 break;
-            case Difficult.Expert:
+            case System.Difficult.Expert:
                 this.row = sideLenOfCell << 3;
                 this.col = sideLenOfCell << 3;
                 break;
-            case Difficult.Boss:
+            case System.Difficult.Boss:
                 this.row = sideLenOfCell << 4;
                 this.col = sideLenOfCell << 4;
                 break;
@@ -379,9 +335,9 @@ class Game {
 
 }
 class MathLogic {
-    public static group(tileSquare: Tile[][], dir: Direction): Tile[][] {
+    public static group(tileSquare: Tile[][], dir: System.Direction): Tile[][] {
 
-        if (dir == Direction.Right) {
+        if (dir == System.Direction.Right) {
             tileSquare.forEach(tileArray => {
                 let isNotComputed = true
                 //实现思路 从每一个行最右边依次向最左边拿"元素" 每个拿到的元素会和它自身右边的元素相乘
@@ -441,7 +397,7 @@ class Animation {
      * @param animType
      * @param divElement (div元素)
      */
-    static BeginAnim(currentTime: number, beginningValue: number, ChangeInValue: number, duration: number, animType: AnimationType, divElement: HTMLDivElement): void {
+    static BeginAnim(currentTime: number, beginningValue: number, ChangeInValue: number, duration: number, animType: System.AnimationType, divElement: HTMLDivElement): void {
 
         //var t = 0;
         //var b = parseInt(divElement.style.left);
@@ -450,7 +406,7 @@ class Animation {
         var ms = 1000;
         var colseID = setInterval(() => {
             switch (animType) {
-                case AnimationType.linear:
+                case System.AnimationType.linear:
 
                     var val = this.linear(currentTime, beginningValue, ChangeInValue, duration);
                     var str;
@@ -466,13 +422,13 @@ class Animation {
                     }
 
                     break;
-                case AnimationType.easeIn:
+                case System.AnimationType.easeIn:
                     this.easeIn(currentTime, beginningValue, ChangeInValue, duration);
                     break;
-                case AnimationType.easeOut:
+                case System.AnimationType.easeOut:
                     this.easeOut(currentTime, beginningValue, ChangeInValue, duration);
                     break;
-                case AnimationType.easeInOut:
+                case System.AnimationType.easeInOut:
                     this.easeInOut(currentTime, beginningValue, ChangeInValue, duration);
                     break;
                 default:
@@ -506,8 +462,8 @@ class UIRender {
      * 最外层的div容器
      */
     private canvas: HTMLDivElement;
-    private game: Game
-    constructor(canvas: HTMLDivElement, game: Game) {
+    private game: Main
+    constructor(canvas: HTMLDivElement, game: Main) {
         this.game = game
         this.canvas = canvas;
         this.backgroundSkin();
@@ -624,20 +580,20 @@ class UIRender {
 
         return eleDiv;
     }
-    TailMove(tile: Tile, dir: Direction): void {
+    TailMove(tile: Tile, dir: System.Direction): void {
         let frameRate: number = 60;
         if (tile) {
             if (dir != null) {
-                if (dir == Direction.Left) {
+                if (dir == System.Direction.Left) {
 
-                    Animation.BeginAnim(0, tile.left, tile.borderWidth - tile.left, frameRate, AnimationType.linear, tile.own);
+                    Animation.BeginAnim(0, tile.left, tile.borderWidth - tile.left, frameRate, System.AnimationType.linear, tile.own);
                     setTimeout(() => {
                         tile.update();
                     }, GC.animDuration);
                 }
-                if (dir == Direction.Right) {
+                if (dir == System.Direction.Right) {
                     var tileWidth = tile.width + tile.borderWidth;
-                    Animation.BeginAnim(0, tile.left, (tileWidth * (tile.currentTableSize().col - 1)) - (tileWidth * tile.currentColIndex()), frameRate, AnimationType.linear, tile.own);
+                    Animation.BeginAnim(0, tile.left, (tileWidth * (tile.currentTableSize().col - 1)) - (tileWidth * tile.currentColIndex()), frameRate, System.AnimationType.linear, tile.own);
                     setTimeout(() => {
                         tile.update();
                     }, GC.animDuration);
@@ -655,7 +611,7 @@ class UIRender {
 
 let canvas = document.getElementById('d') as HTMLDivElement
 if (canvas != null) {
-    let game = new Game(canvas, Difficult.Easy);
+    let game = new Main(canvas, System.Difficult.Easy);
     game.start();
     let guan = new Player(canvas);
 }
