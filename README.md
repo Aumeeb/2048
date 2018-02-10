@@ -27,4 +27,4 @@ enum Difficult {
 
 # game snapshot
 <img src='/src/gitResource/16.png'>
-<img src='/src/gitResource/32.png'>
+<img src='/src/gitResource/32.jpg'>
