@@ -9,7 +9,7 @@ npm install
 npm run dev
 
 
-#you can choise a difficult to start  in the begining
+# you can choise a difficult to start  in the begining
 ```typescript   
 enum Difficult {
     /** has 8 * 8 cells */
