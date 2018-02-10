@@ -1,16 +1,23 @@
 ﻿import * as  System from "./gameEnum";
 import { ColorPan } from './colorPan'
 
-class GC {
-    static animDuration: number = 100
-    static canvasWidth: number = 1200
-    static canvasHeight: number = 1200
-    static bodyPaddingTop: number = 300
-
+interface Size {
+    rows: number;
+    columns: number;
+    /** rows * columns =  */
+    count: () => number;
+}
+/** Game control center ! */
+class GCC {
+    /**画板 */
+    static readonly canvas = document.getElementById('d') as HTMLDivElement
+    static readonly animDuration: number = 100
+    static readonly canvasWidth: number = 1200
+    static readonly canvasHeight: number = 1200
+    static readonly bodyPaddingTop: number = 300
+    static tableSize: Size = { rows: 0, columns: 0, count: () => GCC.tableSize.rows * GCC.tableSize.columns }
     //根据难度计算出的来行数
-    static row: number = 0;
-    //根据难度计算出的来列数
-    static col: number = 0;
+
 }
 
 /**
@@ -117,7 +124,7 @@ class Table {
         this.col = col;
         this.row = row;
     }
-
+    // constructor(public col: number,public row: number) {}
 }
 //公开难度
 var Constpoint: Table;
@@ -129,10 +136,8 @@ class Main {
     canAnim: boolean = true;
     Name = "GameObject";
     uIRender: UIRender;
-    score: number;
-    canvas: HTMLDivElement;
-    row: number = 0
-    col: number = 0
+    score: number = 0;
+
     table: TileSquare;
     cellArray = new Array<Tile>();
     diff: System.Difficult | undefined;
@@ -142,18 +147,16 @@ class Main {
     ranTileCount = 2;  //有bug 可能生成的元素会在同一个坐标上🐷
     //总数
     public tilesCount: number;
-    constructor(canvas: HTMLDivElement, difficult: System.Difficult) {
-        this.table = [];
+    constructor(difficult: System.Difficult) {
         this.setDifficult(difficult);
-        this.score = 0;
-        this.canvas = canvas;
-        this.canvas.tabIndex = 100;
-        this.tilesCount = this.row * this.col;
+        this.table = [];
+        GCC.canvas.tabIndex = 100;
+        this.tilesCount = GCC.tableSize.count()
         this.history = new Map<number, TileSquare>();
-        this.uIRender = new UIRender(this.canvas, this);
+        this.uIRender = new UIRender(GCC.canvas, this);
         this.init();
-        this.uIRender.createBackGroundTail(this.width, this.height, this.row, this.col, "div");
-        this.canvas.onkeydown = (e) => {
+        this.uIRender.createBackGroundTail(this.width, this.height, GCC.tableSize.rows, GCC.tableSize.columns, "div");
+        GCC.canvas.onkeydown = (e) => {
             if (this.inputable) {
                 switch (e.keyCode) {//判断e.indexCode
                     //是37: 就左移
@@ -192,42 +195,33 @@ class Main {
 
         }
 
-        this.canvas.onmouseover = this.mouseOver;
+        GCC.canvas.onmouseover = this.mouseOver;
     }
     setDifficult(diff: System.Difficult): void {
-        let sideLenOfCell: number = 4;
 
+        const sideLenOfCell: number = 4;
+        let finalSideLenOfCell = 4;
 
         switch (diff) {
-            case System.Difficult.Normal:
-                this.row = sideLenOfCell;
-                this.col = sideLenOfCell;
-                break;
             case System.Difficult.Easy:
-                this.row = sideLenOfCell << 1;
-                this.col = sideLenOfCell << 1;
+                finalSideLenOfCell = sideLenOfCell << 1;
                 break;
             case System.Difficult.Hard:
-                this.row = sideLenOfCell << 2;
-                this.col = sideLenOfCell << 2;
+                finalSideLenOfCell = sideLenOfCell << 2;
                 break;
             case System.Difficult.Expert:
-                this.row = sideLenOfCell << 3;
-                this.col = sideLenOfCell << 3;
+                finalSideLenOfCell = sideLenOfCell << 3;
                 break;
             case System.Difficult.Boss:
-                this.row = sideLenOfCell << 4;
-                this.col = sideLenOfCell << 4;
+                finalSideLenOfCell = sideLenOfCell << 4;
                 break;
-            default:
         }
-        this.diff = diff;
-        GC.col = this.col;
-        GC.row = this.row;
-        Constpoint = new Table(this.col, this.row);
+        GCC.tableSize.rows = finalSideLenOfCell;
+        GCC.tableSize.columns = finalSideLenOfCell;
+        Constpoint = new Table(finalSideLenOfCell, finalSideLenOfCell);
     }
     copyTileSquare(source: TileSquare): TileSquare {
-        let target = new Array<Array<Tile>>(this.row);
+        let target = new Array<Array<Tile>>(GCC.tableSize.rows);
         source.forEach(t => {
             var newArray = new Array<Tile>();
             target.push(newArray)
@@ -249,11 +243,11 @@ class Main {
         })
     }
     toTable(cur: Tile[]): TileSquare {
-        let table = new Array<Array<Tile>>(this.row);
+        let table = new Array<Array<Tile>>(GCC.tableSize.rows);
 
         let array = new Array<Tile>();
         for (let i = 0, k = -1; i < cur.length; i++) {
-            if (i % this.row == 0) {
+            if (i % GCC.tableSize.rows == 0) {
                 array = new Array<Tile>();
                 k++
             }
@@ -263,15 +257,15 @@ class Main {
         return table
     }
     init(): void {
-        this.width = GC.canvasWidth;
-        this.height = GC.canvasHeight;
+        this.width = GCC.canvasWidth;
+        this.height = GCC.canvasHeight;
 
 
-        this.table = new Array<Array<Tile>>(this.row);
+        this.table = new Array<Array<Tile>>( GCC.tableSize.rows);
         let tab = 0;
         //设置 棋盘格初始化数据
-        for (let i = 0; i < this.row; i++) {
-            let array1 = new Array<Tile>(this.col);
+        for (let i = 0; i <  GCC.tableSize.rows; i++) {
+            let array1 = new Array<Tile>( GCC.tableSize.columns);
             for (var j = 0; j < array1.length; j++) {
                 array1[j] = new Tile();
                 array1[j].index = tab;
@@ -318,7 +312,7 @@ class Main {
         // console.dir(this.tilesCount);
         this.cellArray.forEach((tile) => {
             if (tile.value > 0) {
-                this.uIRender.createTail(this.row, this.col, tile);
+                this.uIRender.createTail( GCC.tableSize.rows, GCC.tableSize.columns, tile);
             }
         })
 
@@ -445,12 +439,12 @@ class Animation {
 class UIRender {
     private canvasStyle(): void {
         let canvas = document.getElementById('d') as HTMLDivElement;
-        canvas.style.width = this.toPx(GC.canvasWidth)
-        canvas.style.height = this.toPx(GC.canvasHeight)
+        canvas.style.width = this.toPx(GCC.canvasWidth)
+        canvas.style.height = this.toPx(GCC.canvasHeight)
     }
     private bodyStyle(): void {
         var body = document.getElementsByTagName('body').item(0);
-        body.style.paddingTop = this.toPx(GC.bodyPaddingTop);
+        body.style.paddingTop = this.toPx(GCC.bodyPaddingTop);
         body.style.opacity = '0.9';
         body.style.backgroundImage = 'url(./img/huge2.jpg)';
     }
@@ -527,7 +521,7 @@ class UIRender {
         let ranIndex = MathLogic.createRandom(emptyIndexArray.length);
         let availableIndex = emptyIndexArray[ranIndex]
         cellArray[availableIndex].value = 2
-        this.createTail(GC.row, GC.col, cellArray[availableIndex])
+        this.createTail(GCC.tableSize.rows, GCC.tableSize.columns, cellArray[availableIndex])
     }
     public update(previous: TileSquare, next: TileSquare): Boolean {
 
@@ -541,10 +535,10 @@ class UIRender {
         let index = tile.index;
         let value = tile.value;
 
-        let borderWidth = GC.canvasWidth * (1 / 6);
-        let borderHeight = GC.canvasHeight * (1 / 6);
-        let width = (GC.canvasWidth - borderWidth) / col;
-        let height = (GC.canvasHeight - borderHeight) / row;
+        let borderWidth = GCC.canvasWidth * (1 / 6);
+        let borderHeight = GCC.canvasHeight * (1 / 6);
+        let width = (GCC.canvasWidth - borderWidth) / col;
+        let height = (GCC.canvasHeight - borderHeight) / row;
         let pieceOfRectangle = row * col;
         let singleborderWidth = borderWidth / (col + 1);
         let singleborderHeight = borderHeight / (row + 1);
@@ -589,14 +583,14 @@ class UIRender {
                     Animation.BeginAnim(0, tile.left, tile.borderWidth - tile.left, frameRate, System.AnimationType.linear, tile.own);
                     setTimeout(() => {
                         tile.update();
-                    }, GC.animDuration);
+                    }, GCC.animDuration);
                 }
                 if (dir == System.Direction.Right) {
                     var tileWidth = tile.width + tile.borderWidth;
                     Animation.BeginAnim(0, tile.left, (tileWidth * (tile.currentTableSize().col - 1)) - (tileWidth * tile.currentColIndex()), frameRate, System.AnimationType.linear, tile.own);
                     setTimeout(() => {
                         tile.update();
-                    }, GC.animDuration);
+                    }, GCC.animDuration);
                 }
             }
 
@@ -607,12 +601,11 @@ class UIRender {
 
 }
 
-//start
 
-let canvas = document.getElementById('d') as HTMLDivElement
-if (canvas != null) {
-    let game = new Main(canvas, System.Difficult.Easy);
-    game.start();
-    let guan = new Player(canvas);
-}
+
+
+let game = new Main(System.Difficult.Easy);
+game.start();
+    
+
 
