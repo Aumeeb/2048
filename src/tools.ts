@@ -73,7 +73,14 @@ export function combinationTiles(tileSquare: Tile[][], dir: System.Direction): T
     }
     return tileSquare
 }
-
+/**
+ * 實現思路 
+ * (1) 把每個行的空數據去除 ,保留不為0的數據.
+ * (2) 兩兩比對 相同的話存入新的數組  
+ * (3) 最後從新數組賦值給老數組 完成計算
+ * @param table 
+ * @param dir 
+ */
 export function combinationTiles2(table: number[][], dir: System.Direction): number[][] {
 
     if (dir == System.Direction.Right) {
@@ -81,6 +88,8 @@ export function combinationTiles2(table: number[][], dir: System.Direction): num
             let isNotComputed = true
             // 每一行最右边依次向最左边拿"元素" 
             // 每个拿到的元素会和它自身右边的元素相乘
+
+            
             var trueDataCache: number[] = [];
             var clacCache: number[] = [];
             for (let i = tileArray.length - 2; i >= 0; i--) {
