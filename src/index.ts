@@ -187,7 +187,7 @@ class Main {
                     //是38: 就上移
                     case 38:
                         console.log("上");
-                        var newData = convert2DTo1D(combinationTilesLR(d2, System.Direction.Up))
+                        var newData = convert2DTo1D(combinationTilesTB(d2, System.Direction.Up))
                         GCC.addRecord({ curData: newData, curInputValue: System.Direction.Up });
                         break;
                     //是39: 就右移

@@ -84,15 +84,13 @@ export function combinationTiles(tileSquare: Tile[][], dir: System.Direction): T
 export function combinationTilesLR(table: number[][], dir: System.Direction, scoreBouns = 1): number[][] {
 
     var blankArr = createBlankArray(table.length, table[0].length);
- 
-
 
     /**有效行 */
-    const vaildRow = (cache:number[]) => {
+    const vaildRow = (cache: number[]) => {
         for (const tile of tileRowArr) {
             if (tile == 0)
                 continue;
-                cache.push(tile);
+            cache.push(tile);
         }
     }
     //如果是右鍵
@@ -117,7 +115,7 @@ export function combinationTilesLR(table: number[][], dir: System.Direction, sco
                 if (vaildDataCache.length >= 2) {
                     var targetRightIndex: number = targetIndex - 1
                     if (vaildDataCache[targetRightIndex] == vaildDataCache[targetIndex]) {
-                        finalCache.push(vaildDataCache[targetRightIndex] ** 2 * scoreBouns)
+                        finalCache.push(vaildDataCache[targetRightIndex] * 2 * scoreBouns)
                         vaildDataCache.pop();
                         vaildDataCache.pop();
                         continue;
@@ -162,7 +160,7 @@ export function combinationTilesLR(table: number[][], dir: System.Direction, sco
                 if (vaildDataCache.length >= 2) {
                     var targetRightIndex: number = targetIndex + 1
                     if (vaildDataCache[targetRightIndex] == vaildDataCache[targetIndex]) {
-                        finalCache.push(vaildDataCache[targetRightIndex] ** 2 * scoreBouns)
+                        finalCache.push(vaildDataCache[targetRightIndex] * 2 * scoreBouns)
                         vaildDataCache.shift();
                         vaildDataCache.shift();
                         continue;
@@ -188,28 +186,68 @@ export function combinationTilesLR(table: number[][], dir: System.Direction, sco
 }
 export function combinationTilesTB(table: number[][], dir: System.Direction, scoreBouns = 1): number[][] {
     var blankArr = createBlankArray(table.length, table[0].length);
-    var vaildDataCache: number[] = []; //有效數據值
-    var finalCache: number[] = []; //計算後的值
+
     const colsLength = table[0].length
 
-    const vaildCol = (colIndex: number) => {
+    const vaildCol = (colIndex: number, cache: number[]) => {
         for (let i = 0; i < colsLength; i++) {
             var tile = table[i][colIndex];
             if (tile == 0)
                 continue;
-            vaildDataCache.push(tile);
+            cache.push(tile);
         }
     }
-    if (dir == System.Direction.Right) {
+    if (dir == System.Direction.Up) {
 
-        for (let t = 0; t < colsLength; t++) {
-            var tileRowArr = table[t];
-            var blankRowArr = blankArr[t];
+        for (let c = 0; c < colsLength; c++) {
+
+            var vaildDataCache: number[] = []; //有效數據值
+            var finalCache: number[] = []; //計算後的值
+            var blankRowArr = blankArr[c];
 
             // 每一行最右边依次向最左边拿"元素" 
             // 每个拿到的元素会和它自身右边的元素相乘
-            vaildCol(t);
+            vaildCol(c, vaildDataCache);
+            var floor = 0;
+            //如果有效數據數組中的數據長度大於0,那麼就無限循環下去
+            while (vaildDataCache.length != 0) {
+                var targetIndex: number = 0;  //從左開始
+                if (vaildDataCache.length == 1) {
+                    finalCache.push(vaildDataCache[targetIndex]);
+                    vaildDataCache.shift();
+                    break;
+                }
+                if (vaildDataCache.length >= 2) {
+                    var targetRightIndex: number = targetIndex + 1
+                    if (vaildDataCache[targetRightIndex] == vaildDataCache[targetIndex]) {
+                        finalCache.push(vaildDataCache[targetRightIndex] * 2 * scoreBouns)
+                        vaildDataCache.shift();
+                        vaildDataCache.shift();
+                        continue;
+                    } else {
+                        finalCache.push(vaildDataCache[targetIndex]);
+                        vaildDataCache.shift();
+                    }
+                }
+            }
+            for (let i = 0; i < finalCache.length; i++) {
+                blankArr[i][c] = finalCache[i]
+            }
+        }
+        return blankArr
+    }
 
+    if (dir == System.Direction.Down) {
+        for (let c = 0; c < colsLength; c++) {
+
+            var vaildDataCache: number[] = []; //有效數據值
+            var finalCache: number[] = []; //計算後的值
+            var blankRowArr = blankArr[c];
+
+            // 每一行最右边依次向最左边拿"元素" 
+            // 每个拿到的元素会和它自身右边的元素相乘
+            vaildCol(c, vaildDataCache);
+            var floor = 0;
             //如果有效數據數組中的數據長度大於0,那麼就無限循環下去
             while (vaildDataCache.length != 0) {
                 var targetIndex: number = vaildDataCache.length - 1 //從右開始
@@ -221,7 +259,7 @@ export function combinationTilesTB(table: number[][], dir: System.Direction, sco
                 if (vaildDataCache.length >= 2) {
                     var targetRightIndex: number = targetIndex - 1
                     if (vaildDataCache[targetRightIndex] == vaildDataCache[targetIndex]) {
-                        finalCache.push(vaildDataCache[targetRightIndex] ** 2 * scoreBouns)
+                        finalCache.push(vaildDataCache[targetRightIndex] * 2 * scoreBouns)
                         vaildDataCache.pop();
                         vaildDataCache.pop();
                         continue;
@@ -231,16 +269,16 @@ export function combinationTilesTB(table: number[][], dir: System.Direction, sco
                     }
                 }
             }
-            for (let i = blankRowArr.length - 1; i < blankRowArr.length; i--) {
+
+            for (let i =colsLength - 1; i < colsLength; i--) {
                 if (finalCache.length > 0) {
-                    var cValue = finalCache.shift();
+                    var cValue = finalCache.pop();
                     if (cValue != null) {
-                        blankRowArr[i] = cValue
+                        blankArr[i][c] = cValue
                     }
                 } else
                     break;
             }
-
         }
         return blankArr
     }
