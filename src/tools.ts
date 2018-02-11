@@ -81,77 +81,65 @@ export function combinationTiles(tileSquare: Tile[][], dir: System.Direction): T
  * @param table 
  * @param dir 
  */
-export function combinationTiles2(table: number[][], dir: System.Direction): number[][] {
+export function combinationTiles2(table: number[][], dir: System.Direction, scoreBouns = 1): number[][] {
 
+    var blankArr = createblankArray(table.length, table[0].length);
     if (dir == System.Direction.Right) {
-        table.forEach(tileArray => {
-            let isNotComputed = true
+
+
+        for (let t = 0; t < table.length; t++) {
+            var tileRowArr = table[t];
+            var blankRowArr = blankArr[t];
+
             // 每一行最右边依次向最左边拿"元素" 
             // 每个拿到的元素会和它自身右边的元素相乘
-
-            
-            var trueDataCache: number[] = [];
+            var vaildDataCache: number[] = [];
             var clacCache: number[] = [];
-            for (let i = tileArray.length - 2; i >= 0; i--) {
-                //如果元素自身是空，就进入下一轮循环
-                if (tileArray[i] == 0)
+
+            for (const tile of tileRowArr) {
+                if (tile == 0)
                     continue;
-
-                //元素自动向右移动 直到最右边为止
-                let tileIndex = i
-                let right = 1;
-                while (tileArray[tileIndex + right] == 0 && tileIndex < tileArray.length) {
-                    tileArray[tileIndex + right] = tileArray[tileIndex]
-                    tileArray[tileIndex] = 0;
-                    tileIndex++
-                    if (tileIndex == tileArray.length - 1)
-                        break;
-                }
-                //如果當前的元素和右邊的一樣,計算後的結果保存到緩衝區,之後將2個元素清零0;
-
-                if (tileArray[tileIndex] == tileArray[tileIndex + right]) {
-                    clacCache.push(tileArray[tileIndex] ** 2)
-                    tileArray[tileIndex + right] = 0;
-                    tileArray[tileIndex] = 0
-                }
-
+                vaildDataCache.push(tile);
             }
-        })
-        return table
-    }
-    if (dir == System.Direction.Left) {
-        table.forEach(tileArray => {
-            let isNotComputed = true
-            //实现思路 从每一个行最右边依次向最左边拿"元素" 每个拿到的元素会和它自身右边的元素相乘
-            // i=1 表示从左边第二个元素开始
-            for (let i = 1; i <= tileArray.length - 1; i++) {
-                //如果元素自身是空 就不管它
-                if (tileArray[i] == 0)
-                    continue;
-                // 明天在写
-                //元素自动向左移动 直到最左边为止
-                let tileIndex = i
-                while (tileArray[tileIndex + 1] == 0 && tileIndex < tileArray.length) {
-                    tileArray[tileIndex + 1] = tileArray[tileIndex]
-                    tileArray[tileIndex] = 0;
-                    tileIndex++
-                    if (tileIndex == tileArray.length - 1)
-                        break;
+
+            // 移動的齒輪
+            //如果有效數據數組中的數據長度大於0,那麼就無限循環下去
+            while (vaildDataCache.length != 0) {
+                var targetIndex: number = vaildDataCache.length - 1
+                if (vaildDataCache.length == 1) {
+                    clacCache.push(vaildDataCache[targetIndex]);
+                    vaildDataCache.pop();
+                    break;
                 }
-                //如果当前的元素和它右边相邻的元素一样 就可以相乘
-                if (isNotComputed) {
-                    if (tileArray[i] == tileArray[i + 1]) {
-                        tileArray[i + 1] **= 2
-                        tileArray[i] = 0
+                if (vaildDataCache.length >= 2) {
+                    var targetLeftIndex: number = targetIndex - 1
+                    if (vaildDataCache[targetLeftIndex] == vaildDataCache[targetIndex]) {
+                        clacCache.push(vaildDataCache[targetLeftIndex] ** 2 * scoreBouns)
+                        vaildDataCache.pop();
+                        vaildDataCache.pop();
+                        continue;
+                    } else {
+                        clacCache.push(vaildDataCache[targetIndex]);
+                        vaildDataCache.pop();
                     }
-                    isNotComputed = false
                 }
             }
-        })
-        return table
-    }
 
-    return table;
+            for (let i = blankRowArr.length - 1; i < blankRowArr.length; i--) {
+                if (clacCache.length > 0) {
+                    var cValue = clacCache.shift();
+                    if (cValue != null) {
+                        blankRowArr[i] = cValue
+                    }
+                } else
+                    break;
+            }
+
+        }
+        return blankArr
+    }
+    return blankArr;
+
 }
 /**创建初始数据 */
 export function initCreateTiles(length: number, count: number, valuesRange: number[] = [2, 4]): number[] {
@@ -174,3 +162,13 @@ export function initCreateTilesTest() {
     return [4, 4, 0, 0, 2, 0, 4, 4, 2, 2, 2, 2, 4, 2, 4, 4];
 }
 
+export function createblankArray(rows: number, cols: number, defaultVallue = 0): number[][] {
+    var arr2d = new Array<Array<number>>(rows);
+    for (let i = 0; i < rows; i++) {
+        arr2d[i] = [];
+        for (let k = 0; k < rows; k++) {
+            arr2d[i][k] = 0
+        }
+    }
+    return arr2d;
+}
