@@ -1,7 +1,8 @@
 ﻿import * as  System from "./gameEnum";
 import { ColorPan } from './colorPan'
-import { randomNum, combinationTiles, initCreateTiles, combinationTiles2, convert1Dto2D, convert2DTo1D, initCreateTilesTest, } from './tools'
+import { randomNum, combinationTiles, initCreateTiles, combinationTilesLR, combinationTilesTB, convert1Dto2D, convert2DTo1D, initCreateTilesTest, } from './tools'
 import { Option } from "./option";
+
 interface Size {
     /** 横向有多少个方块 */
     rows: number;
@@ -171,20 +172,22 @@ class Main {
         this.uIRender = new UIRender(GCC.canvas);
         this.init();
         GCC.canvas.onkeydown = (e) => {
-            var preData = GCC.history[GCC.history.length - 1].curData;
-            var d2 = convert1Dto2D(preData, GCC.tableSize.rows);
+
+            var preRoundData = GCC.history[GCC.history.length - 1].curData;
+            var d2 = convert1Dto2D(preRoundData, GCC.tableSize.rows);
+
             if (this.inputable) {
                 switch (e.keyCode) {//判断e.indexCode
                     //是37: 就左移
                     case 37:
                         console.log("左");
-                        var newData = convert2DTo1D(combinationTiles2(d2, System.Direction.Left))
+                        var newData = convert2DTo1D(combinationTilesLR(d2, System.Direction.Left))
                         GCC.addRecord({ curData: newData, curInputValue: System.Direction.Left });
                         break;
                     //是38: 就上移
                     case 38:
                         console.log("上");
-                        var newData = convert2DTo1D(combinationTiles2(d2, System.Direction.Up))
+                        var newData = convert2DTo1D(combinationTilesLR(d2, System.Direction.Up))
                         GCC.addRecord({ curData: newData, curInputValue: System.Direction.Up });
                         break;
                     //是39: 就右移
@@ -196,7 +199,7 @@ class Main {
                                 this.uIRender.moveTile(ele, System.Direction.Right);
                             });
 
-                            var newData = convert2DTo1D(combinationTiles2(d2, System.Direction.Right))
+                            var newData = convert2DTo1D(combinationTilesTB(d2, System.Direction.Right))
                             GCC.addRecord({ curData: newData, curInputValue: System.Direction.Right });
                         }
                         this.uIRender.createNewOne(this.cellArray);
@@ -204,7 +207,7 @@ class Main {
                     //是40: 就下移
                     case 40:
                         console.log("下");
-                        var newData = convert2DTo1D(combinationTiles2(d2, System.Direction.Down))
+                        var newData = convert2DTo1D(combinationTilesTB(d2, System.Direction.Down))
                         GCC.addRecord({ curData: newData, curInputValue: System.Direction.Down });
                         break;
                     default:
