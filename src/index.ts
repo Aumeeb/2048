@@ -2,7 +2,7 @@
 import { ColorPan } from './colorPan'
 import { randomNum, combinationTiles, initCreateTiles, combinationTilesLR, combinationTilesTB, convert1Dto2D, convert2DTo1D, initCreateTilesTest, } from './tools'
 import { Option } from "./option";
-
+type TileSquare = Array<Array<Tile>>;
 interface Size {
     /** 横向有多少个方块 */
     rows: number;
@@ -37,7 +37,7 @@ class GCC {
     static tableSize: Size = { rows: 0, columns: 0, count: () => GCC.tableSize.rows * GCC.tableSize.columns }
 
     static history: Step[] = [];
-    static curStep = history.length;
+    static curStep = GCC.history.length;
 
     score: number = 0;
     // //根据难度计算出的来行数
@@ -46,7 +46,7 @@ class GCC {
     // preInputValue: System.Direction = System.Direction.Nothing;
     // historyInputValueList: Array<System.Direction> = new Array<System.Direction>();
     static addRecord(record: Step) {
-        record.index = GCC.curStep;
+        record.index = GCC.history.length
         GCC.history.push(record);
         console.log(record.index)
         console.log(record.curData)
@@ -77,15 +77,9 @@ class Player {
 
 }
 
+/**瓦片*/
 export class Tile {
-    /**
- * 瓦片
- */
-    own: HTMLDivElement
-    constructor() {
-        this.own = document.createElement('div'); //初始化
-    }
-
+    own: HTMLDivElement = document.createElement('div'); //初始化
     /**
   * 索引
   */
@@ -151,7 +145,7 @@ export class Tile {
 
 
 
-type TileSquare = Array<Array<Tile>>;
+
 class Main {
     history: Map<number, TileSquare>
     inputable: boolean = true
@@ -180,38 +174,25 @@ class Main {
                 switch (e.keyCode) {//判断e.indexCode
                     //是37: 就左移
                     case 37:
-                        console.log("左");
                         var newData = convert2DTo1D(combinationTilesLR(d2, System.Direction.Left))
                         GCC.addRecord({ curData: newData, curInputValue: System.Direction.Left });
                         break;
                     //是38: 就上移
                     case 38:
-                        console.log("上");
                         var newData = convert2DTo1D(combinationTilesTB(d2, System.Direction.Up))
                         GCC.addRecord({ curData: newData, curInputValue: System.Direction.Up });
                         break;
                     //是39: 就右移
                     case 39:
-                        console.log("右");
-                        if (this.canAnim) {
-                            combinationTiles(this.table, System.Direction.Right)
-                            this.cellArray.forEach((ele) => {
-                                this.uIRender.moveTile(ele, System.Direction.Right);
-                            });
-
-                            var newData = convert2DTo1D(combinationTilesLR(d2, System.Direction.Right))
-                            GCC.addRecord({ curData: newData, curInputValue: System.Direction.Right });
-                        }
-                        this.uIRender.createNewOne(this.cellArray);
+                        var newData = convert2DTo1D(combinationTilesLR(d2, System.Direction.Right))
+                        GCC.addRecord({ curData: newData, curInputValue: System.Direction.Right });
                         break;
                     //是40: 就下移
                     case 40:
-                        console.log("下");
                         var newData = convert2DTo1D(combinationTilesTB(d2, System.Direction.Down))
                         GCC.addRecord({ curData: newData, curInputValue: System.Direction.Down });
                         break;
                     default:
-                        console.log(e.code);
                 }
             }
 
@@ -257,14 +238,7 @@ class Main {
         })
         return target;
     }
-    recordHistory(cur: TileSquare) {
-        var newCur = this.copyTileSquare(cur);
 
-
-        this.history.set(GCC.curStep++, newCur)
-
-
-    }
     toTable(cur: Tile[]): TileSquare {
         let table = new Array<Array<Tile>>(GCC.tableSize.rows);
 
@@ -299,7 +273,7 @@ class Main {
             this.table[i] = array1;
         }
 
-        this.recordHistory(this.table)
+
         //把矩形2维数组转换1维
 
         // 2 2 1 
@@ -324,8 +298,6 @@ class Main {
 
             cell.value = tileValue;
         }
-        this.recordHistory(this.toTable(this.cellArray));
-
 
     }
     mouseOver(mouse: MouseEvent): void {
@@ -333,9 +305,7 @@ class Main {
     }
 
     start(): void {
-        // console.dir(this.table);
-        // console.dir(this.cellArray);
-        // console.dir(this.tilesCount);
+
         this.cellArray.forEach((tile) => {
             if (tile.value > 0) {
                 this.uIRender.createTile(GCC.tableSize.rows, GCC.tableSize.columns, tile);
