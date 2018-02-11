@@ -2,27 +2,9 @@
 import { ColorPan } from './colorPan'
 import { randomNum, combinationTiles, initCreateTiles, combinationTilesLR, combinationTilesTB, convert1Dto2D, convert2DTo1D, initCreateTilesTest, } from './tools'
 import { Option } from "./option";
-import {  UI} from "./render";
-import { Tile } from "./tile";
-export type TileSquare = Array<Array<Tile>>;
-interface Size {
-    /** 横向有多少个方块 */
-    rows: number;
-    /** 竖向有多少个方块   */
-    columns: number;
-    /** 横向和竖向方块的总数量  */
-    count: () => number;
-}
-Window
-/** 历史数据 */
-interface Step {
-    new?(): Step;
-    index?: number;
-    curInputValue: System.Direction;
-    curData: number[]
-    to2DArray?: () => number[][]
+import { UI } from "./render";
+import { Tile, Size, Step,TileSquare } from "./types";
 
-}
 /** Game control center 游戏控制 ! */
 export class GCC {
     /**画板 */
@@ -64,9 +46,6 @@ interface UserBehavior {
  * record users behaviour and operation state 
  */
 class Player {
-
-
-
     constructor(canvas: HTMLElement) {
         canvas.addEventListener('mouseup', (ev) => {
             console.log('already clicked')
@@ -84,10 +63,6 @@ class Player {
 }
 
 /**瓦片*/
-
-
-
-
 
 class Main {
 
@@ -264,14 +239,7 @@ class Main {
         var beginRan = ran % 2 == 0 ? 2 : 4;
         return beginRan;
     }
-
-
 }
-
-
-
-
-
 
 let game = new Main(System.Difficult.Normal);
 game.start();

@@ -1,4 +1,4 @@
-import { Tile } from "./index";
+import { Tile } from "./types";
 import * as  System from "./gameEnum";
 import { create } from "domain";
 

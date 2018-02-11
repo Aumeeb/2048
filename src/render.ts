@@ -1,7 +1,8 @@
-import { GCC, Tile,TileSquare } from '.';
+import { GCC } from '.';
 import { ColorPan } from './colorPan';
 import { randomNum } from "./tools";
 import * as  System from "./gameEnum";
+import { Tile , TileSquare} from "./types";
 export class UI {
     private canvasStyle(): void {
         let canvas = document.getElementById('d') as HTMLDivElement;

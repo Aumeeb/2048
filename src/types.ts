@@ -1,4 +1,25 @@
-import { GCC } from ".";
+import * as  System from "./gameEnum";
+import {GCC } from '.'
+export type TileSquare = Array<Array<Tile>>;
+export interface Size {
+    /** 横向有多少个方块 */
+    rows: number;
+    /** 竖向有多少个方块   */
+    columns: number;
+    /** 横向和竖向方块的总数量  */
+    count: () => number;
+}
+ 
+/** 历史数据 */
+export interface Step {
+    new?(): Step;
+    index?: number;
+    curInputValue: System.Direction;
+    curData: number[]
+    to2DArray?: () => number[][]
+
+}
+ 
 export class Tile {
     own: HTMLDivElement = document.createElement('div'); //初始化
     /**
