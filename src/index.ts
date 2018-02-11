@@ -199,7 +199,7 @@ class Main {
                                 this.uIRender.moveTile(ele, System.Direction.Right);
                             });
 
-                            var newData = convert2DTo1D(combinationTilesTB(d2, System.Direction.Right))
+                            var newData = convert2DTo1D(combinationTilesLR(d2, System.Direction.Right))
                             GCC.addRecord({ curData: newData, curInputValue: System.Direction.Right });
                         }
                         this.uIRender.createNewOne(this.cellArray);
