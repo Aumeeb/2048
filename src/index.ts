@@ -71,17 +71,15 @@ class Main {
     tileSquare: TileSquare;
     cellArray = new Array<Tile>();
     //开局生成随机多少个瓦片
-    ranTileCount = 2;  //有bug 可能生成的元素会在同一个坐标上🐷
     constructor(difficult: System.Difficult) {
 
         this.setDifficult(difficult);
         this.tileSquare = [];
-
-
-        this.ui = new UI(GCC.canvas);
         this.init();
         this.bindEvent();
-        this.ui.createTile
+
+        this.ui = new UI(GCC.canvas);
+
     }
     bindEvent() {
         GCC.canvas.onkeydown = (e) => {
@@ -174,9 +172,10 @@ class Main {
     init(): void {
 
         // ----------------------------------------------------------------
-        //var initRecord = initCreateTiles(GCC.tableSize.count(),Option.initTileCount,Option.initTileValueRange);
-        var initRecord = initCreateTilesTest();
+        // var initRecord = initCreateTilesTest();
+        var initRecord = initCreateTiles(GCC.tableSize.count(),Option.initTileCount,Option.initTileValueRange);
         GCC.addRecord({ curData: initRecord, curInputValue: System.Direction.Nothing });
+        var record2D= convert1Dto2D(initRecord,GCC.tableSize.rows);
         // ----------------------------------------------------------------
         this.tileSquare = new Array<Array<Tile>>(GCC.tableSize.rows);
         let tab = 0;
@@ -186,36 +185,17 @@ class Main {
             for (var j = 0; j < array1.length; j++) {
                 array1[j] = new Tile();
                 array1[j].index = tab;
+                array1[j].value = record2D[i][j]
                 tab++;
             }
             this.tileSquare[i] = array1;
         }
-
-
-        //把矩形2维数组转换1维
-
-        // 2 2 1 
-        // 1 9 2
-        // 4 6 8
-
-        // 2 2 1 1 9 2 4 6 8
 
         this.tileSquare.forEach(element => {
             element.forEach(tile => {
                 this.cellArray.push(tile);
             });
         });
-
-
-        //设置初始化瓦片索引和值      
-        for (let i = 0; i < this.ranTileCount; i++) {
-            //开始创建2个随机的数字 2或者4
-            let tileIndex = randomNum(GCC.tableSize.count());
-            let tileValue = this.createNumber2or4();
-            let cell = this.cellArray[tileIndex];
-
-            cell.value = tileValue;
-        }
 
     }
     mouseOver(mouse: MouseEvent): void {
@@ -241,7 +221,7 @@ class Main {
     }
 }
 
-let game = new Main(System.Difficult.Normal);
+let game = new Main(System.Difficult.Hard);
 game.start();
 
 

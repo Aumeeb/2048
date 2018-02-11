@@ -2,7 +2,7 @@ import { GCC } from '.';
 import { ColorPan } from './colorPan';
 import { randomNum } from "./tools";
 import * as  System from "./gameEnum";
-import { Tile , TileSquare} from "./types";
+import { Tile, TileSquare } from "./types";
 export class UI {
     private canvasStyle(): void {
         let canvas = document.getElementById('d') as HTMLDivElement;
@@ -38,6 +38,32 @@ export class UI {
         this.c.style.position = "relative";
         this.c.style.borderRadius = this.toPx(6)
     }
+    private colorfulValue(val: number, defaultValue = 2): string {
+        switch (val) {
+            case defaultValue << 0:
+                return ColorPan.Lv1
+            case defaultValue << 1:
+                return ColorPan.Lv2
+            case defaultValue << 2:
+                return ColorPan.Lv3
+            case defaultValue << 3:
+                return ColorPan.Lv4
+            case defaultValue << 4:
+                return ColorPan.Lv5
+            case defaultValue << 5:
+                return ColorPan.Lv6
+            case defaultValue << 6:
+                return ColorPan.Lv7
+            case defaultValue << 7:
+                return ColorPan.Lv8
+            case defaultValue << 8:
+                return ColorPan.Lv9
+
+            default:
+                return ColorPan.Lv6
+
+        }
+    }
     private createBackGroundTail(canvasWidth: number, canvasHeight: number, row: number, col: number, eleName: string): void {
 
         let borderWidth = canvasWidth * (1 / 6);
@@ -68,29 +94,18 @@ export class UI {
         }
     }
     //随机创建一个新的  "格子""
-    public createNewOne(cellArray: Array<Tile>) {
-        //找出空的集合
-        let emptyIndexArray = new Array<number>();
-        for (let i = 0; i < cellArray.length; i++) {
-            if (cellArray[i].value == 0)
-                emptyIndexArray.push(i)
-        }
-        //选出用可用的下标
-        let ranIndex = randomNum(emptyIndexArray.length);
-        let availableIndex = emptyIndexArray[ranIndex]
-        cellArray[availableIndex].value = 2
-        this.createTile(cellArray[availableIndex])
-    }
+
     public update(previous: TileSquare, next: TileSquare): Boolean {
         return true;
     }
+
     public createTile(tile: Tile, row: number = GCC.tableSize.rows, col: number = GCC.tableSize.columns): HTMLDivElement {
         if (tile == null) {
             console.log("dict is null")
         }
         let index = tile.index;
         let value = tile.value;
-
+        let color = this.colorfulValue(value);
         let borderWidth = GCC.canvasWidth * (1 / 6);
         let borderHeight = GCC.canvasHeight * (1 / 6);
         let width = (GCC.canvasWidth - borderWidth) / col;
@@ -103,7 +118,7 @@ export class UI {
 
         eleDiv.style.width = this.toPx(width);
         eleDiv.style.height = this.toPx(height);
-        eleDiv.style.backgroundColor = ColorPan.Lv2;
+        eleDiv.style.backgroundColor = color;
         eleDiv.style.borderRadius = this.toPx(10);
         eleDiv.style.position = "absolute";
         eleDiv.style.lineHeight = this.toPx(height);
