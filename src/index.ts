@@ -2,7 +2,9 @@
 import { ColorPan } from './colorPan'
 import { randomNum, combinationTiles, initCreateTiles, combinationTilesLR, combinationTilesTB, convert1Dto2D, convert2DTo1D, initCreateTilesTest, } from './tools'
 import { Option } from "./option";
-type TileSquare = Array<Array<Tile>>;
+import {  UI} from "./render";
+import { Tile } from "./tile";
+export type TileSquare = Array<Array<Tile>>;
 interface Size {
     /** 横向有多少个方块 */
     rows: number;
@@ -22,7 +24,7 @@ interface Step {
 
 }
 /** Game control center 游戏控制 ! */
-class GCC {
+export class GCC {
     /**画板 */
     static readonly canvas = document.getElementById(Option.canvasId) as HTMLDivElement
     /**画板上内边距 */
@@ -36,6 +38,7 @@ class GCC {
     /**棋盘格 */
     static tableSize: Size = { rows: 0, columns: 0, count: () => GCC.tableSize.rows * GCC.tableSize.columns }
 
+    static user: UserBehavior = { inputable: true }
     static history: Step[] = [];
     static curStep = GCC.history.length;
 
@@ -53,7 +56,10 @@ class GCC {
     }
 }
 
+interface UserBehavior {
+    inputable: boolean
 
+}
 /**
  * record users behaviour and operation state 
  */
@@ -78,99 +84,37 @@ class Player {
 }
 
 /**瓦片*/
-export class Tile {
-    own: HTMLDivElement = document.createElement('div'); //初始化
-    /**
-  * 索引
-  */
-    index: number = 0;
-    /**
-    * 数值
-    */
-    value: number = 0;
-    /**
-    * 元素宽度
-    */
-    width: number = 0;
-    /**
-    * 元素高度
-    */
-    height: number = 0;
-    /**
-    * 边框宽度
-    */
-    borderWidth: number = 0;
-    /**
-    * 边框高度
-    */
-    borderHeight: number = 0;
-    /**
-    * 上偏移
-    */
-    top: number = 0;
-    /**
-    * 左偏移
-    */
-    left: number = 0;
 
-    currentRowIndex(): number {
-        return this.index / GCC.tableSize.columns
-    }
-    currentColIndex(): number {
-        return this.index % GCC.tableSize.columns
-    }
-
-    isEmpty(): boolean {
-        if (this.value == 0)
-            return true
-        else
-            return false
-    }
-
-
-    //更新
-    update(): void {
-        if (this.own != undefined) {
-            if (this.own.style.left)
-                this.left = parseInt(this.own.style.left);
-            if (this.own.style.top)
-                this.top = parseInt(this.own.style.top);
-            if (this.own.style.right)
-                this.top = parseInt(this.own.style.right);
-            if (this.own.style.bottom)
-                this.top = parseInt(this.own.style.bottom);
-        }
-    }
-}
 
 
 
 
 class Main {
-    history: Map<number, TileSquare>
-    inputable: boolean = true
-    canAnim: boolean = true;
-    uIRender: UIRender;
-    table: TileSquare;
-    cellArray = new Array<Tile>();
 
+    canAnim: boolean = true;
+    ui: UI;
+    tileSquare: TileSquare;
+    cellArray = new Array<Tile>();
     //开局生成随机多少个瓦片
     ranTileCount = 2;  //有bug 可能生成的元素会在同一个坐标上🐷
-
     constructor(difficult: System.Difficult) {
 
         this.setDifficult(difficult);
-        this.table = [];
+        this.tileSquare = [];
 
-        this.history = new Map<number, TileSquare>();
-        this.uIRender = new UIRender(GCC.canvas);
+
+        this.ui = new UI(GCC.canvas);
         this.init();
+        this.bindEvent();
+        this.ui.createTile
+    }
+    bindEvent() {
         GCC.canvas.onkeydown = (e) => {
 
             var preRoundData = GCC.history[GCC.history.length - 1].curData;
             var d2 = convert1Dto2D(preRoundData, GCC.tableSize.rows);
 
-            if (this.inputable) {
+            if (GCC.user.inputable) {
                 switch (e.keyCode) {//判断e.indexCode
                     //是37: 就左移
                     case 37:
@@ -200,7 +144,6 @@ class Main {
 
         GCC.canvas.onmouseover = this.mouseOver;
     }
-
     setDifficult(diff: System.Difficult): void {
 
         const sideLenOfCell: number = 4;
@@ -260,7 +203,7 @@ class Main {
         var initRecord = initCreateTilesTest();
         GCC.addRecord({ curData: initRecord, curInputValue: System.Direction.Nothing });
         // ----------------------------------------------------------------
-        this.table = new Array<Array<Tile>>(GCC.tableSize.rows);
+        this.tileSquare = new Array<Array<Tile>>(GCC.tableSize.rows);
         let tab = 0;
         //设置 棋盘格初始化数据
         for (let i = 0; i < GCC.tableSize.rows; i++) {
@@ -270,7 +213,7 @@ class Main {
                 array1[j].index = tab;
                 tab++;
             }
-            this.table[i] = array1;
+            this.tileSquare[i] = array1;
         }
 
 
@@ -282,7 +225,7 @@ class Main {
 
         // 2 2 1 1 9 2 4 6 8
 
-        this.table.forEach(element => {
+        this.tileSquare.forEach(element => {
             element.forEach(tile => {
                 this.cellArray.push(tile);
             });
@@ -308,7 +251,7 @@ class Main {
 
         this.cellArray.forEach((tile) => {
             if (tile.value > 0) {
-                this.uIRender.createTile(GCC.tableSize.rows, GCC.tableSize.columns, tile);
+                this.ui.createTile(tile);
             }
         })
 
@@ -325,228 +268,7 @@ class Main {
 
 }
 
-class Animation {
-    private static linear(t: number, b: number, c: number, d: number): number {
-        return c * t / d + b;
-    }
-    private static easeIn(t: number, b: number, c: number, d: number): number {
-        return c * (t /= d) * t + b;
-    }
-    private static easeOut(t: number, b: number, c: number, d: number): number {
-        return -c * (t /= d) * (t - 2) + b;
-    }
-    private static easeInOut(t: number, b: number, c: number, d: number): number {
-        if ((t /= d / 2) < 1) return c / 2 * t * t + b;
-        return -c / 2 * ((--t) * (t - 2) - 1) + b;
-    }
-    /**
-     * 
-     * @param currentTime（当前时间）
-     * @param beginningValue（初始值） 当前的值 
-     * @param ChangeInValue（增量） 坐标100px to 200px  公式200-100=100   100px to 150px  公式150-100= 50
-     * @param duration (帧率) t++   t<d   值120 每秒
-     * @param animType
-     * @param divElement (div元素)
-     */
-    static BeginAnim(currentTime: number, beginningValue: number, ChangeInValue: number, duration: number, animType: System.AnimationType, divElement: HTMLDivElement): void {
 
-        //var t = 0;
-        //var b = parseInt(divElement.style.left);
-        //var c = -400;
-        //var d = 120;
-        var ms = 1000;
-        var colseID = setInterval(() => {
-            switch (animType) {
-                case System.AnimationType.linear:
-
-                    var val = this.linear(currentTime, beginningValue, ChangeInValue, duration);
-                    var str;
-                    if (currentTime <= duration) {
-                        str = val + "px";
-                        if (divElement != null) {
-                            divElement.style.left = str;
-                        }
-                    }
-                    currentTime++;
-                    if (currentTime == duration) {
-                        //  divElement.style.left = str;
-                    }
-
-                    break;
-                case System.AnimationType.easeIn:
-                    this.easeIn(currentTime, beginningValue, ChangeInValue, duration);
-                    break;
-                case System.AnimationType.easeOut:
-                    this.easeOut(currentTime, beginningValue, ChangeInValue, duration);
-                    break;
-                case System.AnimationType.easeInOut:
-                    this.easeInOut(currentTime, beginningValue, ChangeInValue, duration);
-                    break;
-                default:
-                    this.linear(currentTime, beginningValue, ChangeInValue, duration);
-                    break;
-            }
-
-        }, ms / duration);
-
-        setTimeout(() => { clearInterval(colseID); }, ms);
-    }
-
-}
-class UIRender {
-    private canvasStyle(): void {
-        let canvas = document.getElementById('d') as HTMLDivElement;
-        canvas.style.width = this.toPx(GCC.canvasWidth)
-        canvas.style.height = this.toPx(GCC.canvasHeight)
-    }
-    private bodyStyle(): void {
-        var body = document.getElementsByTagName('body').item(0);
-        body.style.paddingTop = this.toPx(GCC.canvasPaddingTop);
-        body.style.opacity = '0.9';
-        body.style.backgroundImage = 'url(./img/huge2.jpg)';
-    }
-
-    private toPx(val: number): string {
-        return val + 'px';
-    }
-    /**
-     * 最外层的div容器
-     */
-    private c: HTMLDivElement;
-    constructor(c: HTMLDivElement) {
-        this.c = c;
-        this.c.tabIndex = 100;
-        this.backgroundSkin();
-        this.bodyStyle();
-        this.canvasStyle();
-        this.createBackGroundTail(GCC.canvasWidth, GCC.canvasHeight, GCC.tableSize.rows, GCC.tableSize.columns, "div");
-    }
-
-    private backgroundSkin(): void {
-        this.c.style.backgroundColor = ColorPan.backgroundDivBig;
-        this.c.style.margin = "auto";
-        this.c.style.position = "relative";
-        this.c.style.borderRadius = this.toPx(6)
-    }
-    private createBackGroundTail(canvasWidth: number, canvasHeight: number, row: number, col: number, eleName: string): void {
-
-        let borderWidth = canvasWidth * (1 / 6);
-        let borderHeight = canvasHeight * (1 / 6);
-        let width = (canvasWidth - borderWidth) / col;
-        let height = (canvasHeight - borderHeight) / row;
-        let pieceOfRectangle = row * col;
-        let singleborderWidth = borderWidth / (col + 1);
-        let singleborderHeight = borderHeight / (row + 1);
-
-
-        for (var i = 0; i < pieceOfRectangle; i++) {
-
-            let element = document.createElement(eleName);
-            element.style.width = this.toPx(width);
-            element.style.height = this.toPx(height);
-            element.style.backgroundColor = ColorPan.backgroundDivSmall;
-            element.style.borderRadius = this.toPx(10);
-            element.style.position = "absolute";
-
-            let x = ((singleborderWidth + ((singleborderWidth + width) * (i % col))));
-            element.style.left = this.toPx(x);
-            let y = singleborderHeight + (singleborderHeight + height) * (Math.floor(i / col));
-            element.style.top = this.toPx(y);
-
-            this.c.appendChild(element);
-
-        }
-    }
-    //随机创建一个新的  "格子""
-    public createNewOne(cellArray: Array<Tile>) {
-        //找出空的集合
-        let emptyIndexArray = new Array<number>();
-        for (let i = 0; i < cellArray.length; i++) {
-            if (cellArray[i].value == 0)
-                emptyIndexArray.push(i)
-        }
-        //选出用可用的下标
-        let ranIndex = randomNum(emptyIndexArray.length);
-        let availableIndex = emptyIndexArray[ranIndex]
-        cellArray[availableIndex].value = 2
-        this.createTile(GCC.tableSize.rows, GCC.tableSize.columns, cellArray[availableIndex])
-    }
-    public update(previous: TileSquare, next: TileSquare): Boolean {
-        return true;
-    }
-    public createTile(row: number, col: number, tile: Tile
-        , ): HTMLDivElement {
-        if (tile == null) {
-            console.log("dict is null")
-        }
-        let index = tile.index;
-        let value = tile.value;
-
-        let borderWidth = GCC.canvasWidth * (1 / 6);
-        let borderHeight = GCC.canvasHeight * (1 / 6);
-        let width = (GCC.canvasWidth - borderWidth) / col;
-        let height = (GCC.canvasHeight - borderHeight) / row;
-        let pieceOfRectangle = row * col;
-        let singleborderWidth = borderWidth / (col + 1);
-        let singleborderHeight = borderHeight / (row + 1);
-        let eleDiv = document.createElement("div");
-
-
-        eleDiv.style.width = this.toPx(width);
-        eleDiv.style.height = this.toPx(height);
-        eleDiv.style.backgroundColor = ColorPan.Lv2;
-        eleDiv.style.borderRadius = this.toPx(10);
-        eleDiv.style.position = "absolute";
-        eleDiv.style.lineHeight = this.toPx(height);
-        eleDiv.style.textAlign = "center";
-        let x = ((singleborderWidth + ((singleborderWidth + width) * (index % col))));
-        eleDiv.style.left = this.toPx(x);
-        let y = singleborderHeight + (singleborderHeight + height) * (Math.floor(index / col));
-        eleDiv.style.top = this.toPx(y);
-
-        tile.own = eleDiv;
-        tile.width = width;
-        tile.height = height;
-        tile.borderWidth = singleborderWidth;
-        tile.borderHeight = singleborderHeight;
-        tile.left = x;
-        tile.top = y;
-
-
-        var a = document.createElement("a");
-        a.style.fontSize = this.toPx(height / 2.5);
-        a.innerText = tile.value.toString();
-        eleDiv.appendChild(a);
-        this.c.appendChild(eleDiv);
-
-        return eleDiv;
-    }
-    moveTile(tile: Tile, dir: System.Direction): void {
-        let frameRate: number = 60;
-        if (tile) {
-            if (dir != null) {
-                if (dir == System.Direction.Left) {
-
-                    Animation.BeginAnim(0, tile.left, tile.borderWidth - tile.left, frameRate, System.AnimationType.linear, tile.own);
-                    setTimeout(() => {
-                        tile.update();
-                    }, GCC.animDuration);
-                }
-                if (dir == System.Direction.Right) {
-                    var tileWidth = tile.width + tile.borderWidth;
-                    Animation.BeginAnim(0, tile.left, (tileWidth * (GCC.tableSize.rows - 1)) - (tileWidth * tile.currentColIndex()), frameRate, System.AnimationType.linear, tile.own);
-                    setTimeout(() => {
-                        tile.update();
-                    }, GCC.animDuration);
-                }
-            }
-
-        } else {
-            console.log("div不存在");
-        }
-    }
-
-}
 
 
 
