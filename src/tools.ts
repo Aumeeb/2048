@@ -79,29 +79,33 @@ export function combinationTiles2(table: number[][], dir: System.Direction): num
     if (dir == System.Direction.Right) {
         table.forEach(tileArray => {
             let isNotComputed = true
-            //实现思路 从每一个行最右边依次向最左边拿"元素" 每个拿到的元素会和它自身右边的元素相乘
+            // 每一行最右边依次向最左边拿"元素" 
+            // 每个拿到的元素会和它自身右边的元素相乘
+            var trueDataCache: number[] = [];
+            var clacCache: number[] = [];
             for (let i = tileArray.length - 2; i >= 0; i--) {
-                //如果元素自身是空 就不管它
+                //如果元素自身是空，就进入下一轮循环
                 if (tileArray[i] == 0)
                     continue;
 
                 //元素自动向右移动 直到最右边为止
                 let tileIndex = i
-                while (tileArray[tileIndex + 1] == 0 && tileIndex < tileArray.length) {
-                    tileArray[tileIndex + 1] = tileArray[tileIndex]
+                let right = 1;
+                while (tileArray[tileIndex + right] == 0 && tileIndex < tileArray.length) {
+                    tileArray[tileIndex + right] = tileArray[tileIndex]
                     tileArray[tileIndex] = 0;
                     tileIndex++
                     if (tileIndex == tileArray.length - 1)
                         break;
                 }
-                //如果当前的元素和它右边相邻的元素一样 就可以相乘
-                if (isNotComputed) {
-                    if (tileArray[i] == tileArray[i + 1]) {
-                        tileArray[i + 1] **= 2
-                        tileArray[i] = 0
-                    }
-                    isNotComputed = false
+                //如果當前的元素和右邊的一樣,計算後的結果保存到緩衝區,之後將2個元素清零0;
+
+                if (tileArray[tileIndex] == tileArray[tileIndex + right]) {
+                    clacCache.push(tileArray[tileIndex] ** 2)
+                    tileArray[tileIndex + right] = 0;
+                    tileArray[tileIndex] = 0
                 }
+
             }
         })
         return table
@@ -156,5 +160,8 @@ export function initCreateTiles(length: number, count: number, valuesRange: numb
 
     }
     return result;
+}
+export function initCreateTilesTest() {
+    return [4, 4, 0, 0, 2, 0, 4, 4, 2, 2, 2, 2, 4, 2, 4, 4];
 }
 

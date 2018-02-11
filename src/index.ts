@@ -1,7 +1,7 @@
 ﻿import * as  System from "./gameEnum";
 import { ColorPan } from './colorPan'
-import { randomNum, combinationTiles, initCreateTiles, combinationTiles2, convert1Dto2D, convert2DTo1D, } from './tools'
-
+import { randomNum, combinationTiles, initCreateTiles, combinationTiles2, convert1Dto2D, convert2DTo1D, initCreateTilesTest, } from './tools'
+import { Option } from "./option";
 interface Size {
     /** 横向有多少个方块 */
     rows: number;
@@ -23,13 +23,13 @@ interface Step {
 /** Game control center 游戏控制 ! */
 class GCC {
     /**画板 */
-    static readonly canvas = document.getElementById('d') as HTMLDivElement
+    static readonly canvas = document.getElementById(Option.canvasId) as HTMLDivElement
     /**画板上内边距 */
     static readonly canvasPaddingTop: number = 300
     /**画板宽度 */
-    static readonly canvasWidth: number = 1200
+    static readonly canvasWidth: number = Option.resolution.w;
     /**画板高度 */
-    static readonly canvasHeight: number = 1200
+    static readonly canvasHeight: number = Option.resolution.h;
     /**动画持续时间 */
     static readonly animDuration: number = 100
     /**棋盘格 */
@@ -195,7 +195,7 @@ class Main {
                             this.cellArray.forEach((ele) => {
                                 this.uIRender.moveTile(ele, System.Direction.Right);
                             });
-                         
+
                             var newData = convert2DTo1D(combinationTiles2(d2, System.Direction.Right))
                             GCC.addRecord({ curData: newData, curInputValue: System.Direction.Right });
                         }
@@ -279,8 +279,9 @@ class Main {
     init(): void {
 
         // ----------------------------------------------------------------
-        var initRecord = initCreateTiles(GCC.tableSize.count(), 2);
-        GCC.addRecord({  curData: initRecord, curInputValue: System.Direction.Nothing });
+        //var initRecord = initCreateTiles(GCC.tableSize.count(),Option.initTileCount,Option.initTileValueRange);
+        var initRecord = initCreateTilesTest();
+        GCC.addRecord({ curData: initRecord, curInputValue: System.Direction.Nothing });
         // ----------------------------------------------------------------
         this.table = new Array<Array<Tile>>(GCC.tableSize.rows);
         let tab = 0;
@@ -577,7 +578,7 @@ class UIRender {
 
 
 
-let game = new Main(System.Difficult.Kids);
+let game = new Main(System.Difficult.Normal);
 game.start();
 
 
