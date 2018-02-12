@@ -52,7 +52,7 @@ export function combinationTiles(tileSquare: Tile[][], dir: System.Direction): T
  */
 export function combinationTilesLR(table: number[][], dir: System.Direction, scoreBouns = 1): number[][] {
 
-    var blankArr = createBlankArray(table.length, table[0].length);
+    var blankArr = createBlank2DArray(table.length, table[0].length);
 
     /**有效行 */
     const vaildRow = (cache: number[]) => {
@@ -154,7 +154,7 @@ export function combinationTilesLR(table: number[][], dir: System.Direction, sco
 
 }
 export function combinationTilesTB(table: number[][], dir: System.Direction, scoreBouns = 1): number[][] {
-    var blankArr = createBlankArray(table.length, table[0].length);
+    var blankArr = createBlank2DArray(table.length, table[0].length);
 
     const colsLength = table[0].length
 
@@ -276,7 +276,7 @@ export function initCreateTilesTest() {
     // return [4, 4, 0, 0, 2, 0, 4, 4, 2, 2, 2, 2, 4, 2, 4, 4];
     return [4, 4, 4, 0, 2, 2, 4, 4, 2, 2, 2, 2, 4, 2, 4, 4];
 }
-export function createBlankArray(rows: number, cols: number, defaultVallue = 0): number[][] {
+export function createBlank2DArray(rows: number, cols: number, defaultVallue = 0): number[][] {
     var arr2d = new Array<Array<number>>(rows);
     for (let i = 0; i < rows; i++) {
         arr2d[i] = [];
