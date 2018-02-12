@@ -269,7 +269,6 @@ export function initCreateTiles(length: number, count: number, valuesRange: numb
             result[ranNum] = valuesRange[ranNum % valuesRange.length]
             pushCount++;
         }
-
     }
     return result;
 }

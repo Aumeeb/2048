@@ -1,7 +1,7 @@
 ﻿import * as  System from "./gameEnum";
 import { ColorPan } from './colors'
 import { randomNum, combinationTiles, initCreateTiles, combinationTilesLR, combinationTilesTB, initCreateTilesTest, } from './tools'
-import { convert1Dto2D, convert2DTo1D,  } from "./convert";
+import { convertD2, convertD1,  } from "./convert";
 import { Option } from "./option";
 import { UI } from "./render";
 import { Tile, Size, Step, TileSquare } from "./types";
@@ -86,28 +86,28 @@ class Main {
         GCC.canvas.onkeydown = (e) => {
 
             var preRoundData = GCC.history[GCC.history.length - 1].curData;
-            var d2 = convert1Dto2D(preRoundData, GCC.tableSize.rows);
+            var d2 = convertD2(preRoundData, GCC.tableSize.rows);
 
             if (GCC.user.inputable) {
                 switch (e.keyCode) {//判断e.indexCode
                     //是37: 就左移
                     case 37:
-                        var newData = convert2DTo1D(combinationTilesLR(d2, System.Direction.Left))
+                        var newData = convertD1(combinationTilesLR(d2, System.Direction.Left))
                         GCC.addRecord({ curData: newData, curInputValue: System.Direction.Left });
                         break;
                     //是38: 就上移
                     case 38:
-                        var newData = convert2DTo1D(combinationTilesTB(d2, System.Direction.Up))
+                        var newData = convertD1(combinationTilesTB(d2, System.Direction.Up))
                         GCC.addRecord({ curData: newData, curInputValue: System.Direction.Up });
                         break;
                     //是39: 就右移
                     case 39:
-                        var newData = convert2DTo1D(combinationTilesLR(d2, System.Direction.Right))
+                        var newData = convertD1(combinationTilesLR(d2, System.Direction.Right))
                         GCC.addRecord({ curData: newData, curInputValue: System.Direction.Right });
                         break;
                     //是40: 就下移
                     case 40:
-                        var newData = convert2DTo1D(combinationTilesTB(d2, System.Direction.Down))
+                        var newData = convertD1(combinationTilesTB(d2, System.Direction.Down))
                         GCC.addRecord({ curData: newData, curInputValue: System.Direction.Down });
                         break;
                     default:
@@ -178,7 +178,7 @@ class Main {
         // var initRecord = initCreateTilesTest();
         var initRecord = initCreateTiles(GCC.tableSize.count(), Option.initTileCount, Option.initTileValueRange);
         GCC.addRecord({ curData: initRecord, curInputValue: System.Direction.Nothing });
-        var record2D = convert1Dto2D(initRecord, GCC.tableSize.rows);
+        var record2D = convertD2(initRecord, GCC.tableSize.rows);
         // ----------------------------------------------------------------
         this.tileSquare = new Array<Array<Tile>>(GCC.tableSize.rows);
         let tab = 0;

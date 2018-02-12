@@ -1,5 +1,5 @@
 import { GCC } from '.';
-import { ColorPan } from './colors';
+import { ColorPan, randomHex } from './colors';
 import { randomNum } from "./tools";
 import * as  System from "./gameEnum";
 import { Tile, TileSquare } from "./types";
@@ -40,25 +40,15 @@ export class UI {
     }
     private colorfulValue(val: number, defaultValue = 2): string {
         switch (val) {
-            case defaultValue << 0:
-                return ColorPan.Lv1
-            case defaultValue << 1:
-                return ColorPan.Lv2
-            case defaultValue << 2:
-                return ColorPan.Lv3
-            case defaultValue << 3:
-                return ColorPan.Lv4
-            case defaultValue << 4:
-                return ColorPan.Lv5
-            case defaultValue << 5:
-                return ColorPan.Lv6
-            case defaultValue << 6:
-                return ColorPan.Lv7
-            case defaultValue << 7:
-                return ColorPan.Lv8
-            case defaultValue << 8:
-                return ColorPan.Lv9
-
+            case defaultValue << 0: return ColorPan.Lv1;
+            case defaultValue << 1: return ColorPan.Lv2;
+            case defaultValue << 2: return ColorPan.Lv3;
+            case defaultValue << 3: return ColorPan.Lv4;
+            case defaultValue << 4: return ColorPan.Lv5;
+            case defaultValue << 5: return ColorPan.Lv6;
+            case defaultValue << 6: return ColorPan.Lv7;
+            case defaultValue << 7: return ColorPan.Lv8;
+            case defaultValue << 8: return ColorPan.Lv9;
             default:
                 return ColorPan.Lv6
 
@@ -105,7 +95,9 @@ export class UI {
 
         let index = tile.index;
         let value = tile.value;
+
         let color = this.colorfulValue(value);
+
         let borderWidth = GCC.canvasWidth * (1 / 6);
         let borderHeight = GCC.canvasHeight * (1 / 6);
         let width = (GCC.canvasWidth - borderWidth) / col;
@@ -117,11 +109,12 @@ export class UI {
 
         eleDiv.style.width = this.toPx(width);
         eleDiv.style.height = this.toPx(height);
-        eleDiv.style.backgroundColor = color;
+        eleDiv.style.backgroundColor =color;
         eleDiv.style.borderRadius = this.toPx(10);
         eleDiv.style.position = "absolute";
         eleDiv.style.lineHeight = this.toPx(height);
         eleDiv.style.textAlign = "center";
+        eleDiv.className='tile';
         let x = ((singleborderWidth + ((singleborderWidth + width) * (index % col))));
         eleDiv.style.left = this.toPx(x);
         let y = singleborderHeight + (singleborderHeight + height) * (Math.floor(index / col));

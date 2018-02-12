@@ -1,5 +1,8 @@
 import { randomNum } from "./tools";
 
+
+const Max = 2 << 7 - 1;
+
 export class ColorPan {
     public static Lv1 = "#FFFFCC";
     public static Lv2 = "#CCFFFF";
@@ -14,10 +17,18 @@ export class ColorPan {
     public static backgroundDivBig = "#b8ac9e";
     public static backgroundDivSmall = "#d5cdc2";
 }
+
 export function randomRGB(): string {
-    let Max = 2 << 7 - 1;
     let R = randomNum(Max);
     let G = randomNum(Max);
     let B = randomNum(Max);
+
     return `RGB(${R},${G},${B})`;
+}
+export function randomHex(): string {
+    let R = randomNum(Max).toString(16);
+    let G = randomNum(Max).toString(16);
+    let B = randomNum(Max).toString(16);
+
+    return `#${R}${G}${B}`;
 }

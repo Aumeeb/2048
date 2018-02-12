@@ -5,7 +5,7 @@ import {dev} from './devOption'
 var copy = require('recursive-copy');
 
 //需要被复制的文件夹
-const foldersName = ['img']; 
+const foldersName = ['img','css']; 
 const srcPath = path.resolve(__dirname, '..') + '\\' //获取资源路径
 
 const buildPath = path.resolve(__dirname, '../../') + '\\' + dev.outputFolder;
