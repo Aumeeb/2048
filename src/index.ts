@@ -147,7 +147,7 @@ class Main {
 
     init(): void {
         var initRecord = initCreateTiles(GCC.tableSize.count(), Option.initTileCount, Option.initTileValueRange);
-        GCC.addRecord({ curData: initRecord, curInputValue: System.Direction.Nothing });
+        GCC.addRecord({ curData: initRecord, direction: System.Direction.Nothing });
         this.ui.draw(GCC.curRecord().curData)
     }
     mouseOver(mouse: MouseEvent): void {
@@ -165,4 +165,4 @@ class Main {
     }
 }
 
-new Main(System.Difficult.Easy);
+new Main(System.Difficult.Kids);

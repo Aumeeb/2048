@@ -14,7 +14,7 @@ export interface Size {
 export interface Step {
     new?(): Step;
     index?: number;
-    curInputValue: System.Direction;
+    direction: System.Direction;
     curData: number[]
     to2DArray?: () => number[][]
 

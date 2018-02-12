@@ -21,7 +21,9 @@ enum Difficult {
     /** has 32 * 32 cells */
     Expert,
     /** has 64 * 64 cells */
-    Boss
+    Boss,
+    /** has 88 * 88 cells */
+    Assay
 }
 ```
 

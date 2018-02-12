@@ -4,6 +4,7 @@ import { randomNum, combinationTilesLR, combinationTilesTB } from "./tools";
 import * as  System from "./gameEnum";
 import { Tile, TileSquare } from "./types";
 import { convertD2, convertD1 } from './convert';
+import { Aud } from './audio';
 export class UI {
     private collection: Array<Element> = [];
     private canvasStyle(): void {
@@ -32,6 +33,7 @@ export class UI {
         this.bodyStyle();
         this.canvasStyle();
         //   this.createBackGroundTail(GCC.canvasWidth, GCC.canvasHeight, GCC.tableSize.rows, GCC.tableSize.columns, "div");
+
     }
 
     private backgroundSkin(): void {
@@ -124,8 +126,11 @@ export class UI {
         tileSquare.forEach(element => {
             element.forEach(tile => {
                 this.createTile(tile)
+                // this.moveTile(tile,GCC.curRecord().direction)
             });
         });
+
+        
 
     }
     public move(event: KeyboardEvent) {
@@ -164,9 +169,11 @@ export class UI {
                     break;
             }
 
-            GCC.addRecord({ curData: newData, curInputValue: dir });
+            GCC.addRecord({ curData: newData, direction: dir });
             this.clear(GCC.canvas);
+            Aud.play()
             this.draw(GCC.curRecord().curData)
+            // this.moveTile()
         }
     }
     public createTile(tile: Tile, row: number = GCC.tableSize.rows, col: number = GCC.tableSize.columns): HTMLDivElement {
