@@ -22,11 +22,11 @@ export enum Difficult {
  */
 
 export enum Direction {
-    Left,
-    Up,
-    Down,
-    Right,
-    Nothing,
+    Left=37,
+    Up=38,
+    Right=39,
+    Down=40,
+    Nothing=0
 }
 /**
  *there are some beaufully color  
@@ -36,5 +36,4 @@ export enum AnimationType {
     easeIn,
     easeOut,
     easeInOut,
-
 }

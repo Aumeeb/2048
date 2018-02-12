@@ -52,7 +52,7 @@ export class UI {
             case defaultValue << 7: return ColorPan.Lv8;
             case defaultValue << 8: return ColorPan.Lv9;
             default:
-                return ColorPan.Lv6
+                return ColorPan.Default;
 
         }
     }
@@ -129,36 +129,44 @@ export class UI {
 
     }
     public move(event: KeyboardEvent) {
+        const keyCode = event.keyCode;
+        if (keyCode == System.Direction.Left ||
+            keyCode == System.Direction.Up ||
+            keyCode == System.Direction.Right ||
+            keyCode == System.Direction.Down) {
+        } else {
+            return;
+        }
+
+
         var preRoundData = GCC.history[GCC.history.length - 1].curData;
         var d2 = convertD2(preRoundData, GCC.tableSize.rows);
 
+        var newData: number[] = [];
+        var dir: System.Direction = System.Direction.Nothing;
         if (GCC.user.inputable) {
-            switch (event.keyCode) {//判断e.indexCode
-                //是37: 就左移
-                case 37:
-                    var newData = convertD1(combinationTilesLR(d2, System.Direction.Left))
-                    GCC.addRecord({ curData: newData, curInputValue: System.Direction.Left });
+            switch (keyCode) {
+                case System.Direction.Left:
+                    newData = convertD1(combinationTilesLR(d2, System.Direction.Left))
+                    dir = System.Direction.Left;
                     break;
-                //是38: 就上移
-                case 38:
-                    var newData = convertD1(combinationTilesTB(d2, System.Direction.Up))
-                    GCC.addRecord({ curData: newData, curInputValue: System.Direction.Up });
+                case System.Direction.Up:
+                    newData = convertD1(combinationTilesTB(d2, System.Direction.Up))
+                    dir = System.Direction.Up;
                     break;
-                //是39: 就右移
-                case 39:
-                    var newData = convertD1(combinationTilesLR(d2, System.Direction.Right))
-                    GCC.addRecord({ curData: newData, curInputValue: System.Direction.Right });
-                    this.clear(GCC.canvas);
-                    this.draw(GCC.curRecord().curData)
-
+                case System.Direction.Right:
+                    newData = convertD1(combinationTilesLR(d2, System.Direction.Right))
+                    dir = System.Direction.Right;
                     break;
-                //是40: 就下移
-                case 40:
-                    var newData = convertD1(combinationTilesTB(d2, System.Direction.Down))
-                    GCC.addRecord({ curData: newData, curInputValue: System.Direction.Down });
+                case System.Direction.Down:
+                    newData = convertD1(combinationTilesTB(d2, System.Direction.Down))
+                    dir = System.Direction.Down;
                     break;
-                default:
             }
+
+            GCC.addRecord({ curData: newData, curInputValue: dir });
+            this.clear(GCC.canvas);
+            this.draw(GCC.curRecord().curData)
         }
     }
     public createTile(tile: Tile, row: number = GCC.tableSize.rows, col: number = GCC.tableSize.columns): HTMLDivElement {
@@ -304,5 +312,4 @@ class Animation {
 
         setTimeout(() => { clearInterval(colseID); }, ms);
     }
-
 }

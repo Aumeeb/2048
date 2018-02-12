@@ -33,9 +33,3 @@ export function copyResources() {
     }
 
 }
-
-
-
-
-
-

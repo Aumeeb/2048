@@ -12,4 +12,3 @@ export const Option = {
     /**畫佈的大小 */
     resolution: { w: 1200, h: 1200 }
 }
-

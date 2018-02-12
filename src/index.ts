@@ -10,6 +10,7 @@ import { Tile, Size, Step, TileSquare } from "./types";
 export class GCC {
     /**画板 */
     static readonly canvas = document.getElementById(Option.canvasId) as HTMLDivElement
+    static readonly stage = document.getElementsByTagName('body')[0] as HTMLBodyElement
     /**画板上内边距 */
     static readonly canvasPaddingTop: number = 300
     /**画板宽度 */
@@ -86,7 +87,7 @@ class Main {
         this.bindEvent();
     }
     bindEvent() {
-        GCC.canvas.onkeydown = (e) => {this.ui.move(e)}
+        GCC.stage.onkeydown = (e) => {this.ui.move(e)}
         GCC.canvas.onmouseover = this.mouseOver;
     }
     setDifficult(diff: System.Difficult): void {
@@ -164,8 +165,4 @@ class Main {
     }
 }
 
-new Main(System.Difficult.Normal);
-
-
-
-
+new Main(System.Difficult.Easy);
