@@ -286,6 +286,9 @@ export function combinationTilesTB(table: number[][], dir: System.Direction, sco
 }
 /**创建初始数据 */
 export function initCreateTiles(length: number, count: number, valuesRange: number[] = [2, 4]): number[] {
+    if(count>length)
+        count=length;
+        
     let pushCount = 0
     let result: number[] = [];
     for (let i = 0; i < length; i++) {
@@ -305,7 +308,6 @@ export function initCreateTilesTest() {
     // return [4, 4, 0, 0, 2, 0, 4, 4, 2, 2, 2, 2, 4, 2, 4, 4];
     return [4, 4, 4, 0, 2, 2, 4, 4, 2, 2, 2, 2, 4, 2, 4, 4];
 }
-
 export function createBlankArray(rows: number, cols: number, defaultVallue = 0): number[][] {
     var arr2d = new Array<Array<number>>(rows);
     for (let i = 0; i < rows; i++) {

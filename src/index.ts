@@ -3,7 +3,7 @@ import { ColorPan } from './colorPan'
 import { randomNum, combinationTiles, initCreateTiles, combinationTilesLR, combinationTilesTB, convert1Dto2D, convert2DTo1D, initCreateTilesTest, } from './tools'
 import { Option } from "./option";
 import { UI } from "./render";
-import { Tile, Size, Step,TileSquare } from "./types";
+import { Tile, Size, Step, TileSquare } from "./types";
 
 /** Game control center 游戏控制 ! */
 export class GCC {
@@ -137,6 +137,8 @@ class Main {
                 break;
             case System.Difficult.Boss:
                 finalSideLenOfCell = sideLenOfCell << 4;
+            case System.Difficult.Abyss:
+                finalSideLenOfCell = 88
                 break;
         }
         GCC.tableSize.rows = finalSideLenOfCell;
@@ -173,9 +175,9 @@ class Main {
 
         // ----------------------------------------------------------------
         // var initRecord = initCreateTilesTest();
-        var initRecord = initCreateTiles(GCC.tableSize.count(),Option.initTileCount,Option.initTileValueRange);
+        var initRecord = initCreateTiles(GCC.tableSize.count(), Option.initTileCount, Option.initTileValueRange);
         GCC.addRecord({ curData: initRecord, curInputValue: System.Direction.Nothing });
-        var record2D= convert1Dto2D(initRecord,GCC.tableSize.rows);
+        var record2D = convert1Dto2D(initRecord, GCC.tableSize.rows);
         // ----------------------------------------------------------------
         this.tileSquare = new Array<Array<Tile>>(GCC.tableSize.rows);
         let tab = 0;
@@ -221,7 +223,7 @@ class Main {
     }
 }
 
-let game = new Main(System.Difficult.Hard);
+let game = new Main(System.Difficult.Kids);
 game.start();
 
 
