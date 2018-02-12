@@ -1,9 +1,11 @@
 import { GCC } from '.';
 import { ColorPan, randomHex } from './colors';
-import { randomNum } from "./tools";
+import { randomNum, combinationTilesLR, combinationTilesTB } from "./tools";
 import * as  System from "./gameEnum";
 import { Tile, TileSquare } from "./types";
+import { convertD2, convertD1 } from './convert';
 export class UI {
+    private collection: Array<Element> = [];
     private canvasStyle(): void {
         let canvas = document.getElementById('d') as HTMLDivElement;
         canvas.style.width = this.toPx(GCC.canvasWidth)
@@ -29,7 +31,7 @@ export class UI {
         this.backgroundSkin();
         this.bodyStyle();
         this.canvasStyle();
-        this.createBackGroundTail(GCC.canvasWidth, GCC.canvasHeight, GCC.tableSize.rows, GCC.tableSize.columns, "div");
+        //   this.createBackGroundTail(GCC.canvasWidth, GCC.canvasHeight, GCC.tableSize.rows, GCC.tableSize.columns, "div");
     }
 
     private backgroundSkin(): void {
@@ -87,7 +89,78 @@ export class UI {
     public update(previous: TileSquare, next: TileSquare): Boolean {
         return true;
     }
+    clear(canvas: HTMLDivElement): boolean {
+        try {
+            while (canvas.hasChildNodes()) //当div下还存在子节点时 循环继续
+            {
+                if (canvas.firstChild) {
+                    canvas.removeChild(canvas.firstChild);
+                }
+            }
+            this.collection = [];
+        } catch (e) {
+            return false
+        }
+        return true
+    }
+    public draw(records: number[]) {
 
+        var record2D = convertD2(records, GCC.tableSize.rows);
+
+        var tileSquare = new Array<Array<Tile>>(GCC.tableSize.rows);
+        let tab = 0;
+        //设置 棋盘格初始化数据
+        for (let i = 0; i < GCC.tableSize.rows; i++) {
+            let array1 = new Array<Tile>(GCC.tableSize.columns);
+            for (var j = 0; j < array1.length; j++) {
+                array1[j] = new Tile();
+                array1[j].index = tab;
+                array1[j].value = record2D[i][j]
+                tab++;
+            }
+            tileSquare[i] = array1;
+        }
+
+        tileSquare.forEach(element => {
+            element.forEach(tile => {
+                this.createTile(tile)
+            });
+        });
+
+    }
+    public move(event: KeyboardEvent) {
+        var preRoundData = GCC.history[GCC.history.length - 1].curData;
+        var d2 = convertD2(preRoundData, GCC.tableSize.rows);
+
+        if (GCC.user.inputable) {
+            switch (event.keyCode) {//判断e.indexCode
+                //是37: 就左移
+                case 37:
+                    var newData = convertD1(combinationTilesLR(d2, System.Direction.Left))
+                    GCC.addRecord({ curData: newData, curInputValue: System.Direction.Left });
+                    break;
+                //是38: 就上移
+                case 38:
+                    var newData = convertD1(combinationTilesTB(d2, System.Direction.Up))
+                    GCC.addRecord({ curData: newData, curInputValue: System.Direction.Up });
+                    break;
+                //是39: 就右移
+                case 39:
+                    var newData = convertD1(combinationTilesLR(d2, System.Direction.Right))
+                    GCC.addRecord({ curData: newData, curInputValue: System.Direction.Right });
+                    this.clear(GCC.canvas);
+                    this.draw(GCC.curRecord().curData)
+
+                    break;
+                //是40: 就下移
+                case 40:
+                    var newData = convertD1(combinationTilesTB(d2, System.Direction.Down))
+                    GCC.addRecord({ curData: newData, curInputValue: System.Direction.Down });
+                    break;
+                default:
+            }
+        }
+    }
     public createTile(tile: Tile, row: number = GCC.tableSize.rows, col: number = GCC.tableSize.columns): HTMLDivElement {
         if (tile == null) {
             console.log("dict is null")
@@ -109,12 +182,12 @@ export class UI {
 
         eleDiv.style.width = this.toPx(width);
         eleDiv.style.height = this.toPx(height);
-        eleDiv.style.backgroundColor =color;
+        eleDiv.style.backgroundColor = color;
         eleDiv.style.borderRadius = this.toPx(10);
         eleDiv.style.position = "absolute";
         eleDiv.style.lineHeight = this.toPx(height);
         eleDiv.style.textAlign = "center";
-        eleDiv.className='tile';
+        eleDiv.className = 'tile';
         let x = ((singleborderWidth + ((singleborderWidth + width) * (index % col))));
         eleDiv.style.left = this.toPx(x);
         let y = singleborderHeight + (singleborderHeight + height) * (Math.floor(index / col));

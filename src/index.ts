@@ -1,7 +1,7 @@
 ﻿import * as  System from "./gameEnum";
 import { ColorPan } from './colors'
 import { randomNum, combinationTiles, initCreateTiles, combinationTilesLR, combinationTilesTB, initCreateTilesTest, } from './tools'
-import { convertD2, convertD1,  } from "./convert";
+import { convertD2, convertD1, } from "./convert";
 import { Option } from "./option";
 import { UI } from "./render";
 import { Tile, Size, Step, TileSquare } from "./types";
@@ -23,8 +23,14 @@ export class GCC {
 
     static user: UserBehavior = { inputable: true }
     static history: Step[] = [];
-    static curStep = GCC.history.length;
-
+    static curRound = () => GCC.history.length;
+    static curRecord = (): Step => {
+        if (GCC.history.length > 0) {
+            return GCC.history[GCC.history.length - 1];
+        } else {
+            return Object.create(null) as Step
+        }
+    }
     score: number = 0;
     // //根据难度计算出的来行数
     // canInput: boolean = true;
@@ -73,49 +79,14 @@ class Main {
     cellArray = new Array<Tile>();
     //开局生成随机多少个瓦片
     constructor(difficult: System.Difficult) {
-
         this.setDifficult(difficult);
+        this.ui = new UI(GCC.canvas);
         this.tileSquare = [];
         this.init();
         this.bindEvent();
-
-        this.ui = new UI(GCC.canvas);
-
     }
     bindEvent() {
-        GCC.canvas.onkeydown = (e) => {
-
-            var preRoundData = GCC.history[GCC.history.length - 1].curData;
-            var d2 = convertD2(preRoundData, GCC.tableSize.rows);
-
-            if (GCC.user.inputable) {
-                switch (e.keyCode) {//判断e.indexCode
-                    //是37: 就左移
-                    case 37:
-                        var newData = convertD1(combinationTilesLR(d2, System.Direction.Left))
-                        GCC.addRecord({ curData: newData, curInputValue: System.Direction.Left });
-                        break;
-                    //是38: 就上移
-                    case 38:
-                        var newData = convertD1(combinationTilesTB(d2, System.Direction.Up))
-                        GCC.addRecord({ curData: newData, curInputValue: System.Direction.Up });
-                        break;
-                    //是39: 就右移
-                    case 39:
-                        var newData = convertD1(combinationTilesLR(d2, System.Direction.Right))
-                        GCC.addRecord({ curData: newData, curInputValue: System.Direction.Right });
-                        break;
-                    //是40: 就下移
-                    case 40:
-                        var newData = convertD1(combinationTilesTB(d2, System.Direction.Down))
-                        GCC.addRecord({ curData: newData, curInputValue: System.Direction.Down });
-                        break;
-                    default:
-                }
-            }
-
-        }
-
+        GCC.canvas.onkeydown = (e) => {this.ui.move(e)}
         GCC.canvas.onmouseover = this.mouseOver;
     }
     setDifficult(diff: System.Difficult): void {
@@ -172,48 +143,17 @@ class Main {
         }
         return table
     }
-    init(): void {
 
-        // ----------------------------------------------------------------
-        // var initRecord = initCreateTilesTest();
+    init(): void {
         var initRecord = initCreateTiles(GCC.tableSize.count(), Option.initTileCount, Option.initTileValueRange);
         GCC.addRecord({ curData: initRecord, curInputValue: System.Direction.Nothing });
-        var record2D = convertD2(initRecord, GCC.tableSize.rows);
-        // ----------------------------------------------------------------
-        this.tileSquare = new Array<Array<Tile>>(GCC.tableSize.rows);
-        let tab = 0;
-        //设置 棋盘格初始化数据
-        for (let i = 0; i < GCC.tableSize.rows; i++) {
-            let array1 = new Array<Tile>(GCC.tableSize.columns);
-            for (var j = 0; j < array1.length; j++) {
-                array1[j] = new Tile();
-                array1[j].index = tab;
-                array1[j].value = record2D[i][j]
-                tab++;
-            }
-            this.tileSquare[i] = array1;
-        }
-
-        this.tileSquare.forEach(element => {
-            element.forEach(tile => {
-                this.cellArray.push(tile);
-            });
-        });
-
+        this.ui.draw(GCC.curRecord().curData)
     }
     mouseOver(mouse: MouseEvent): void {
         //   console.log(mouse.x);
     }
 
-    start(): void {
 
-        this.cellArray.forEach((tile) => {
-            if (tile.value > 0) {
-                this.ui.createTile(tile);
-            }
-        })
-
-    }
     /**
     * 创建随机数字 2 or 4
     */
@@ -224,8 +164,8 @@ class Main {
     }
 }
 
-let game = new Main(System.Difficult.Normal);
-game.start();
+new Main(System.Difficult.Normal);
+
 
 
 
