@@ -5,39 +5,8 @@ import { create } from "domain";
 export function randomNum(n: number): number {
     return Math.floor(Math.random() * n);
 }
-export function randomRGB(): string {
-    let Max = 2 << 7 - 1;
-    let R = randomNum(Max);
-    let G = randomNum(Max);
-    let B = randomNum(Max);
-    return `RGB(${R},${G},${B})`;
-}
-export function convert1Dto2D(cur: number[], rows: number): number[][] {
-    let table = new Array<Array<number>>(rows);
 
-    let array: number[] = [];
-    for (let i = 0, k = -1; i < cur.length; i++) {
-        if (i % rows == 0) {
-            array = [];
-            k++
-        }
-        array.push(cur[i]);
-        table[k] = array;
-    }
-    return table
-}
-export function convert2DTo1D(cur: number[][]): number[] {
 
-    var rows = cur.length;
-    var cols = cur[0].length
-    var result: number[] = [];
-    for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < cur[i].length; j++) {
-            result.push(cur[i][j]);
-        }
-    }
-    return result;
-}
 export function combinationTiles(tileSquare: Tile[][], dir: System.Direction): Tile[][] {
 
     if (dir == System.Direction.Right) {
@@ -288,7 +257,7 @@ export function combinationTilesTB(table: number[][], dir: System.Direction, sco
 export function initCreateTiles(length: number, count: number, valuesRange: number[] = [2, 4]): number[] {
     if(count>length)
         count=length;
-        
+
     let pushCount = 0
     let result: number[] = [];
     for (let i = 0; i < length; i++) {

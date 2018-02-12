@@ -1,5 +1,5 @@
 import { GCC } from '.';
-import { ColorPan } from './colorPan';
+import { ColorPan } from './colors';
 import { randomNum } from "./tools";
 import * as  System from "./gameEnum";
 import { Tile, TileSquare } from "./types";
@@ -74,7 +74,6 @@ export class UI {
         let singleborderWidth = borderWidth / (col + 1);
         let singleborderHeight = borderHeight / (row + 1);
 
-
         for (var i = 0; i < pieceOfRectangle; i++) {
 
             let element = document.createElement(eleName);
@@ -103,6 +102,7 @@ export class UI {
         if (tile == null) {
             console.log("dict is null")
         }
+
         let index = tile.index;
         let value = tile.value;
         let color = this.colorfulValue(value);
@@ -114,7 +114,6 @@ export class UI {
         let singleborderWidth = borderWidth / (col + 1);
         let singleborderHeight = borderHeight / (row + 1);
         let eleDiv = document.createElement("div");
-
 
         eleDiv.style.width = this.toPx(width);
         eleDiv.style.height = this.toPx(height);
@@ -136,7 +135,6 @@ export class UI {
         tile.left = x;
         tile.top = y;
 
-
         var a = document.createElement("a");
         a.style.fontSize = this.toPx(height / 2.5);
         a.innerText = tile.value.toString();
@@ -147,6 +145,7 @@ export class UI {
     }
     moveTile(tile: Tile, dir: System.Direction): void {
         let frameRate: number = 60;
+
         if (tile) {
             if (dir != null) {
                 if (dir == System.Direction.Left) {
@@ -157,6 +156,7 @@ export class UI {
                     }, GCC.animDuration);
                 }
                 if (dir == System.Direction.Right) {
+
                     var tileWidth = tile.width + tile.borderWidth;
                     Animation.BeginAnim(0, tile.left, (tileWidth * (GCC.tableSize.rows - 1)) - (tileWidth * tile.currentColIndex()), frameRate, System.AnimationType.linear, tile.own);
                     setTimeout(() => {

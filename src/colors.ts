@@ -1,3 +1,5 @@
+import { randomNum } from "./tools";
+
 export class ColorPan {
     public static Lv1 = "#FFFFCC";
     public static Lv2 = "#CCFFFF";
@@ -11,4 +13,11 @@ export class ColorPan {
     public static Lv10 = "#CCCCFF";
     public static backgroundDivBig = "#b8ac9e";
     public static backgroundDivSmall = "#d5cdc2";
+}
+export function randomRGB(): string {
+    let Max = 2 << 7 - 1;
+    let R = randomNum(Max);
+    let G = randomNum(Max);
+    let B = randomNum(Max);
+    return `RGB(${R},${G},${B})`;
 }

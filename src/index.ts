@@ -1,6 +1,7 @@
 ﻿import * as  System from "./gameEnum";
-import { ColorPan } from './colorPan'
-import { randomNum, combinationTiles, initCreateTiles, combinationTilesLR, combinationTilesTB, convert1Dto2D, convert2DTo1D, initCreateTilesTest, } from './tools'
+import { ColorPan } from './colors'
+import { randomNum, combinationTiles, initCreateTiles, combinationTilesLR, combinationTilesTB, initCreateTilesTest, } from './tools'
+import { convert1Dto2D, convert2DTo1D,  } from "./convert";
 import { Option } from "./option";
 import { UI } from "./render";
 import { Tile, Size, Step, TileSquare } from "./types";
@@ -223,7 +224,7 @@ class Main {
     }
 }
 
-let game = new Main(System.Difficult.Kids);
+let game = new Main(System.Difficult.Normal);
 game.start();
 
 
