@@ -5,7 +5,9 @@ class Audios {
         this.audio.src = './audio/updown.mp3';
     }
     public play(type?: AudioType) {
-        this.audio.play();
+      this.audio = document.createElement('audio');
+      this.audio.src = './audio/updown.mp3';
+      this.audio.play()
     }
 
 }
