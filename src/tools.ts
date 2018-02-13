@@ -253,7 +253,7 @@ export function combinationTilesTB(table: number[][], dir: System.Direction, sco
     }
     return table;
 }
-/**创建初始数据 */
+
 export function initCreateTiles(length: number, count: number, valuesRange: number[] = [2, 4]): number[] {
     if(count>length)
         count=length;
@@ -271,6 +271,9 @@ export function initCreateTiles(length: number, count: number, valuesRange: numb
         }
     }
     return result;
+}
+export function aid(){
+    
 }
 export function initCreateTilesTest() {
     // return [4, 4, 0, 0, 2, 0, 4, 4, 2, 2, 2, 2, 4, 2, 4, 4];

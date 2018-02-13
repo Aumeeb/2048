@@ -1,6 +1,6 @@
 interface IEnumerator<T> {
     MoveNext: () => boolean;
-    current: () => T;
+    current: T;
 }
 interface IEnumerable<T> {
     GetEnumerator: () => Collection<T>
@@ -20,7 +20,7 @@ class Collection<T> implements IEnumerator<T> {
         else
             return false;
     }
-    current(): T {
+    get current(): T {
         if (this.position == -1) {
             throw "錯誤";
         }
@@ -37,14 +37,14 @@ class Enumerable<T> implements IEnumerable<T> {
         this.collection = new Collection(list);
     }
     GetEnumerator() {
-        return this.collection
+        return this.collection;
     }
 }
 
 var school = new Enumerable<Person>([{ name: "lee", age: 12 }, { name: "ham", age: 44 }, { name: "woz", age: 22 }]);
 
-var persons =school.GetEnumerator();
+var persons = school.GetEnumerator();
 
 while (persons.MoveNext()) {
-    console.log(`${persons.current().name} ${persons.current().age}`);
+    console.log(`${persons.current.name} ${persons.current.age}`);
 }

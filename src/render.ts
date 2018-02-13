@@ -16,7 +16,7 @@ export class UI {
         var body = document.getElementsByTagName('body').item(0);
         body.style.paddingTop = this.toPx(GCC.canvasPaddingTop);
         body.style.opacity = '0.9';
-        body.style.backgroundImage = 'url(./img/huge2.jpg)';
+        body.style.background = 'url(./img/huge2.jpg)';
     }
 
     private toPx(val: number): string {
@@ -130,7 +130,7 @@ export class UI {
             });
         });
 
-        
+
 
     }
     public move(event: KeyboardEvent) {
