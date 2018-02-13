@@ -1,6 +1,7 @@
-import { Tile } from "./types";
+import { Tile, TileInfo } from "./types";
 import * as  System from "./gameEnum";
 import { create } from "domain";
+import { Festival } from "./festival";
 
 export function randomNum(n: number): number {
     return Math.floor(Math.random() * n);
@@ -50,14 +51,15 @@ export function combinationTiles(tileSquare: Tile[][], dir: System.Direction): T
  * @param table 
  * @param dir 
  */
-export function combinationTilesLR(table: number[][], dir: System.Direction, scoreBouns = 1): number[][] {
+
+export function combinationTilesLR(table: TileInfo[][], dir: System.Direction, scoreBouns = 1): TileInfo[][] {
 
     var blankArr = createBlank2DArray(table.length, table[0].length);
 
     /**有效行 */
-    const vaildRow = (cache: number[]) => {
+    const vaildRow = (cache: TileInfo[]) => {
         for (const tile of tileRowArr) {
-            if (tile == 0)
+            if (tile.value == 0)
                 continue;
             cache.push(tile);
         }
@@ -65,8 +67,8 @@ export function combinationTilesLR(table: number[][], dir: System.Direction, sco
     //如果是右鍵
     if (dir == System.Direction.Right) {
 
-        var vaildDataCache: number[] = []; //有效數據值
-        var finalCache: number[] = []; //計算後的值
+        var vaildDataCache: TileInfo[] = []; //有效數據值
+        var finalCache: TileInfo[] = []; //計算後的值
         for (let t = 0; t < table.length; t++) {
             var tileRowArr = table[t];
             var blankRowArr = blankArr[t];
@@ -84,9 +86,14 @@ export function combinationTilesLR(table: number[][], dir: System.Direction, sco
                 if (vaildDataCache.length >= 2) {
                     var targetRightIndex: number = targetIndex - 1
                     if (vaildDataCache[targetRightIndex] == vaildDataCache[targetIndex]) {
-                        finalCache.push(vaildDataCache[targetRightIndex] * 2 * scoreBouns)
+
+                        var target = vaildDataCache[targetRightIndex];
+                        target.value = target.value * target.value * Festival.bouns(target.value);
+                        finalCache.push(target)
+
                         vaildDataCache.pop();
                         vaildDataCache.pop();
+
                         continue;
                     } else {
                         finalCache.push(vaildDataCache[targetIndex]);
@@ -109,8 +116,8 @@ export function combinationTilesLR(table: number[][], dir: System.Direction, sco
     }
     //如果是左鍵
     if (dir == System.Direction.Left) {
-        var vaildDataCache: number[] = []; //有效數據值
-        var finalCache: number[] = []; //計算後的值
+        var vaildDataCache: TileInfo[] = []; //有效數據值
+        var finalCache: TileInfo[] = []; //計算後的值
         for (let t = 0; t < table.length; t++) {
             var tileRowArr = table[t];
             var blankRowArr = blankArr[t];
@@ -129,9 +136,14 @@ export function combinationTilesLR(table: number[][], dir: System.Direction, sco
                 if (vaildDataCache.length >= 2) {
                     var targetRightIndex: number = targetIndex + 1
                     if (vaildDataCache[targetRightIndex] == vaildDataCache[targetIndex]) {
-                        finalCache.push(vaildDataCache[targetRightIndex] * 2 * scoreBouns)
+
+                        var target = vaildDataCache[targetRightIndex];
+                        target.value = target.value * target.value * Festival.bouns(target.value);
+                        finalCache.push(target)
+
                         vaildDataCache.shift();
                         vaildDataCache.shift();
+
                         continue;
                     } else {
                         finalCache.push(vaildDataCache[targetIndex]);
@@ -153,16 +165,18 @@ export function combinationTilesLR(table: number[][], dir: System.Direction, sco
     return blankArr;
 
 }
-export function combinationTilesTB(table: number[][], dir: System.Direction, scoreBouns = 1): number[][] {
+export function combinationTilesTB(table: TileInfo[][], dir: System.Direction, scoreBouns = 1): TileInfo[][] {
     var blankArr = createBlank2DArray(table.length, table[0].length);
 
     const colsLength = table[0].length
 
-    const vaildCol = (colIndex: number, cache: number[]) => {
+    const vaildCol = (colIndex: number, cache: TileInfo[]) => {
         for (let i = 0; i < colsLength; i++) {
             var tile = table[i][colIndex];
-            if (tile == 0)
+
+            if (tile.value == 0)
                 continue;
+
             cache.push(tile);
         }
     }
@@ -170,8 +184,8 @@ export function combinationTilesTB(table: number[][], dir: System.Direction, sco
 
         for (let c = 0; c < colsLength; c++) {
 
-            var vaildDataCache: number[] = []; //有效數據值
-            var finalCache: number[] = []; //計算後的值
+            var vaildDataCache: TileInfo[] = []; //有效數據值
+            var finalCache: TileInfo[] = []; //計算後的值
             var blankRowArr = blankArr[c];
 
             // 每一行最右边依次向最左边拿"元素" 
@@ -189,9 +203,15 @@ export function combinationTilesTB(table: number[][], dir: System.Direction, sco
                 if (vaildDataCache.length >= 2) {
                     var targetRightIndex: number = targetIndex + 1
                     if (vaildDataCache[targetRightIndex] == vaildDataCache[targetIndex]) {
-                        finalCache.push(vaildDataCache[targetRightIndex] * 2 * scoreBouns)
+
+
+                        var target = vaildDataCache[targetRightIndex];
+                        target.value = target.value * target.value * Festival.bouns(target.value);
+                        finalCache.push(target)
+
                         vaildDataCache.shift();
                         vaildDataCache.shift();
+
                         continue;
                     } else {
                         finalCache.push(vaildDataCache[targetIndex]);
@@ -209,8 +229,8 @@ export function combinationTilesTB(table: number[][], dir: System.Direction, sco
     if (dir == System.Direction.Down) {
         for (let c = 0; c < colsLength; c++) {
 
-            var vaildDataCache: number[] = []; //有效數據值
-            var finalCache: number[] = []; //計算後的值
+            var vaildDataCache: TileInfo[] = []; //有效數據值
+            var finalCache: TileInfo[] = []; //計算後的值
             var blankRowArr = blankArr[c];
 
             // 每一行最右边依次向最左边拿"元素" 
@@ -228,9 +248,14 @@ export function combinationTilesTB(table: number[][], dir: System.Direction, sco
                 if (vaildDataCache.length >= 2) {
                     var targetRightIndex: number = targetIndex - 1
                     if (vaildDataCache[targetRightIndex] == vaildDataCache[targetIndex]) {
-                        finalCache.push(vaildDataCache[targetRightIndex] * 2 * scoreBouns)
+
+                        var target = vaildDataCache[targetRightIndex];
+                        target.value = target.value * target.value * Festival.bouns(target.value);
+                        finalCache.push(target)
+
                         vaildDataCache.pop();
                         vaildDataCache.pop();
+
                         continue;
                     } else {
                         finalCache.push(vaildDataCache[targetIndex]);
@@ -239,7 +264,7 @@ export function combinationTilesTB(table: number[][], dir: System.Direction, sco
                 }
             }
 
-            for (let i =colsLength - 1; i < colsLength; i--) {
+            for (let i = colsLength - 1; i < colsLength; i--) {
                 if (finalCache.length > 0) {
                     var cValue = finalCache.pop();
                     if (cValue != null) {
@@ -254,37 +279,37 @@ export function combinationTilesTB(table: number[][], dir: System.Direction, sco
     return table;
 }
 
-export function initCreateTiles(length: number, count: number, valuesRange: number[] = [2, 4]): number[] {
-    if(count>length)
-        count=length;
+export function initCreateTiles(length: number, count: number, valuesRange: number[] = [2, 4]): TileInfo[] {
+    if (count > length)
+        count = length;
 
     let pushCount = 0
-    let result: number[] = [];
+    let result: TileInfo[] = [];
     for (let i = 0; i < length; i++) {
-        result.push(0)
+        result.push({ index: i, value: 0, isAid: true })
     }
     while (pushCount < count) {
         var ranNum = randomNum(length)
-        if (result[ranNum] == 0) {
-            result[ranNum] = valuesRange[ranNum % valuesRange.length]
+        if (result[ranNum].value == 0) {
+            result[ranNum].value = valuesRange[ranNum % valuesRange.length]
             pushCount++;
         }
     }
     return result;
 }
-export function aid(){
-    
+export function aid() {
+
 }
 export function initCreateTilesTest() {
-    // return [4, 4, 0, 0, 2, 0, 4, 4, 2, 2, 2, 2, 4, 2, 4, 4];
     return [4, 4, 4, 0, 2, 2, 4, 4, 2, 2, 2, 2, 4, 2, 4, 4];
 }
-export function createBlank2DArray(rows: number, cols: number, defaultVallue = 0): number[][] {
-    var arr2d = new Array<Array<number>>(rows);
+export function createBlank2DArray(rows: number, cols: number, defaultVallue = 0): TileInfo[][] {
+    var arr2d = new Array<Array<TileInfo>>(rows);
     for (let i = 0; i < rows; i++) {
-        arr2d[i] = [];
+        arr2d[i] = new Array<TileInfo>(cols);
         for (let k = 0; k < rows; k++) {
-            arr2d[i][k] = 0
+            arr2d[i][k] = Object.create(null) 
+            arr2d[i][k].value = 0
         }
     }
     return arr2d;

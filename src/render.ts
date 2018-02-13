@@ -2,7 +2,7 @@ import { GCC } from '.';
 import { ColorPan, randomHex } from './colors';
 import { randomNum, combinationTilesLR, combinationTilesTB } from "./tools";
 import * as  System from "./gameEnum";
-import { Tile, TileSquare } from "./types";
+import { Tile, TileSquare, TileInfo } from "./types";
 import { convertD2, convertD1 } from './convert';
 import { Aud } from './audio';
 export class UI {
@@ -105,7 +105,7 @@ export class UI {
         }
         return true
     }
-    public draw(records: number[]) {
+    public draw(records: TileInfo[]) {
 
         var record2D = convertD2(records, GCC.tableSize.rows);
 
@@ -117,7 +117,7 @@ export class UI {
             for (var j = 0; j < array1.length; j++) {
                 array1[j] = new Tile();
                 array1[j].index = tab;
-                array1[j].value = record2D[i][j]
+                array1[j].value = record2D[i][j].value
                 tab++;
             }
             tileSquare[i] = array1;
@@ -147,7 +147,7 @@ export class UI {
         var preRoundData = GCC.history[GCC.history.length - 1].curData;
         var d2 = convertD2(preRoundData, GCC.tableSize.rows);
 
-        var newData: number[] = [];
+        var newData: TileInfo[] = [];
         var dir: System.Direction = System.Direction.Nothing;
         if (GCC.user.inputable) {
             switch (keyCode) {

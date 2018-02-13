@@ -15,7 +15,8 @@ export interface Point {
 }
 export interface TileInfo {
     value: number;
-    position: Point;
+    position?: Point;
+    index: number;
     isAid: boolean;
 }
 /** 历史数据 */
@@ -23,7 +24,7 @@ export interface Step {
     new?(): Step;
     index?: number;
     direction: System.Direction;
-    curData: number[]
+    curData: TileInfo[]
 }
 
 export class Tile {
