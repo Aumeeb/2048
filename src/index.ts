@@ -1,4 +1,4 @@
-﻿import * as  System from "./gameEnum";
+﻿import * as  System from "./types";
 import { ColorPan } from './colors'
 import { randomNum, combinationTiles, initCreateTiles, combinationTilesLR, combinationTilesTB} from './tools'
 import { convertD2, convertD1, } from "./convert";

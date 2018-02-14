@@ -1,12 +1,29 @@
 import { Tile, TileInfo } from "./types";
-import * as  System from "./gameEnum";
+import * as  System from "./types";
 import { create } from "domain";
 import { Festival } from "./festival";
 
 export function randomNum(n: number): number {
     return Math.floor(Math.random() * n);
 }
+export function randomRangeIndexs(count: number, maxRangeValue: number): number[] {
 
+    if (count < 1) {
+        throw "參數錯誤 至少生成一個";
+    }
+    var reuslt: number[] = [];
+    while (reuslt.length != count) {
+        var index = randomNum(maxRangeValue);
+
+        var exist = reuslt.filter(p => p == index).length != 0
+        if (!exist) {
+            reuslt.push(index)
+        }
+    }
+    return reuslt;
+
+
+}
 
 export function combinationTiles(tileSquare: Tile[][], dir: System.Direction): Tile[][] {
 
@@ -278,7 +295,7 @@ export function combinationTilesTB(table: TileInfo[][], dir: System.Direction, s
     }
     return table;
 }
-
+/**初始化獎勵的方塊 */
 export function initCreateTiles(length: number, count: number, valuesRange: number[] = [2, 4]): TileInfo[] {
     if (count > length)
         count = length;
@@ -297,8 +314,27 @@ export function initCreateTiles(length: number, count: number, valuesRange: numb
     }
     return result;
 }
-export function aid() {
+/**額外獎勵方塊 */
+export function aid(data: TileInfo[], count: number = 1): TileInfo[] {
+    var emptySolt = data.filter(p => p.value == 0)
+    var emptySoltCount = emptySolt.length;
 
+    if (emptySoltCount == 0)
+        return data;
+
+    if (emptySoltCount <= count) {
+        emptySoltCount = count;
+    }
+
+
+    var vaildIndexs = randomRangeIndexs(count, emptySoltCount);
+
+    for (const index of vaildIndexs) {
+        data[index].value = 2     //未完成 生成隨即範圍
+        data[index].isAid = true;
+    }
+
+    return data;
 }
 export function initCreateTilesTest() {
     return [4, 4, 4, 0, 2, 2, 4, 4, 2, 2, 2, 2, 4, 2, 4, 4];
@@ -308,7 +344,7 @@ export function createBlank2DArray(rows: number, cols: number, defaultVallue = 0
     for (let i = 0; i < rows; i++) {
         arr2d[i] = new Array<TileInfo>(cols);
         for (let k = 0; k < rows; k++) {
-            arr2d[i][k] = Object.create(null) 
+            arr2d[i][k] = Object.create(null)
             arr2d[i][k].value = 0
         }
     }

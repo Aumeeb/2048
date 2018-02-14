@@ -9,6 +9,8 @@ export const Option = {
     size: { row: 8, col: 8 },
     /**獎勵 */
     scoreBouns: 2,
+    /**再下一回合會獎勵方塊的數量 */
+    tilesCountBouns:1,
     /**畫佈的大小 */
     resolution: { w: 1200, h: 1200 }
 }

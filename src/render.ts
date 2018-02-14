@@ -1,10 +1,11 @@
 import { GCC } from '.';
 import { ColorPan, randomHex } from './colors';
-import { randomNum, combinationTilesLR, combinationTilesTB } from "./tools";
-import * as  System from "./gameEnum";
+import { randomNum, combinationTilesLR, combinationTilesTB, aid } from "./tools";
+import * as  System from "./types";
 import { Tile, TileSquare, TileInfo } from "./types";
 import { convertD2, convertD1 } from './convert';
 import { Aud } from './audio';
+import { Option } from './option';
 export class UI {
     private collection: Array<Element> = [];
     private canvasStyle(): void {
@@ -168,8 +169,8 @@ export class UI {
                     dir = System.Direction.Down;
                     break;
             }
-
-            GCC.addRecord({ curData: newData, direction: dir });
+            var data = aid(newData,Option.tilesCountBouns);
+            GCC.addRecord({ curData: data, direction: dir });
             this.clear(GCC.canvas);
             Aud.play()
             this.draw(GCC.curRecord().curData)
