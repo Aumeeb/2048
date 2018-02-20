@@ -136,7 +136,8 @@ export class UI {
     }
     public move(event: KeyboardEvent) {
         const keyCode = event.keyCode;
-        if (keyCode == System.Direction.Left ||
+        if (
+            keyCode == System.Direction.Left ||
             keyCode == System.Direction.Up ||
             keyCode == System.Direction.Right ||
             keyCode == System.Direction.Down) {
@@ -169,7 +170,7 @@ export class UI {
                     dir = System.Direction.Down;
                     break;
             }
-            var data = aid(newData,Option.tilesCountBouns);
+            var data = aid(newData, Option.tilesCountBouns);
             GCC.addRecord({ curData: data, direction: dir });
             this.clear(GCC.canvas);
             Aud.play()

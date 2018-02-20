@@ -1,9 +1,10 @@
 
 import { GCC } from '.'
+export type Path = string & { __pathBrand: any }
 /**
  *  You can choose one of all difficult to start game , each difficult has different cells
  */
-export enum Difficult {
+export const enum Difficult {
     /** has 3 * 3 cells */
     Kids,
     /** has 4 * 4 cells */
@@ -16,7 +17,7 @@ export enum Difficult {
     Expert,
     /** has 64 * 64 cells */
     Boss,
-     /** has 88 * 88 cells */
+    /** has 88 * 88 cells */
     Abyss
 }
 /**
@@ -24,18 +25,18 @@ export enum Difficult {
  */
 
 export const enum Direction {
-    Left=37,
-    Up=38,
-    Right=39,
-    Down=40,
-    Nothing=0,
+    Left = 37,
+    Up = 38,
+    Right = 39,
+    Down = 40,
+    Nothing = 0,
+    VaildDirection = Left | Up | Right | Down,
+} 
 
-}
- 
 /**
  *there are some beaufully color  
  */
-export enum AnimationType {
+export const enum AnimationType {
     linear,
     easeIn,
     easeOut,

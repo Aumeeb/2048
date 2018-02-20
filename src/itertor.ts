@@ -41,9 +41,9 @@ class Enumerable<T> implements IEnumerable<T> {
     }
 }
 
-var school = new Enumerable<Person>([{ name: "lee", age: 12 }, { name: "ham", age: 44 }, { name: "woz", age: 22 }]);
+var company = new Enumerable<Person>([{ name: "lee", age: 12 }, { name: "ham", age: 44 }, { name: "woz", age: 22 }]);
 
-var persons = school.GetEnumerator();
+var persons = company.GetEnumerator();
 
 while (persons.MoveNext()) {
     console.log(`${persons.current.name} ${persons.current.age}`);

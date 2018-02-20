@@ -3,6 +3,10 @@ import * as  System from "./types";
 import { create } from "domain";
 import { Festival } from "./festival";
 
+export function toPath(filename: string, path: string): System.Path {
+    return Object.assign(filename, { __pathBrand: path });
+}
+
 export function randomNum(n: number): number {
     return Math.floor(Math.random() * n);
 }
@@ -332,6 +336,7 @@ export function aid(data: TileInfo[], count: number = 1): TileInfo[] {
     for (const index of vaildIndexs) {
         data[index].value = 2     //未完成 生成隨即範圍
         data[index].isAid = true;
+        data[index].index = index;
     }
 
     return data;
