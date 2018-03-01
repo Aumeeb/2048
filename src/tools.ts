@@ -355,3 +355,39 @@ export function createBlank2DArray(rows: number, cols: number, defaultVallue = 0
     }
     return arr2d;
 }
+
+
+export function printInfo<T>() {
+    return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+        const method = descriptor.value;
+        descriptor.value = (...args: any[]) => {
+            let ret: any;
+            try {
+                ret = method.apply(target, args);
+                console.info(args[0].index);
+                console.info(args[0].curData);
+            } catch (error) {
+                console.error(` 處理錯誤`);
+            }
+            return ret;
+        }
+    }
+}
+
+let testDecorator = (type: any) => {
+
+    return (target: any, name: string, descriptor: PropertyDescriptor) => {
+        const method = descriptor.value;
+        descriptor.value = (...args: any[]) => {
+            console.info(`($) 正在执行: $($) = ?`);
+            let ret;
+            try {
+                ret = method.apply(target, args);
+                console.info(`($) 成功 : $($) => $`);
+            } catch (error) {
+                console.error(`($) 失败: $($) => $`);
+            }
+            return ret;
+        }
+    }
+}

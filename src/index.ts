@@ -1,6 +1,6 @@
 ﻿import * as  System from "./types";
 import { ColorPan } from './colors'
-import { randomNum, combinationTiles, initCreateTiles, combinationTilesLR, combinationTilesTB} from './tools'
+import { randomNum, combinationTiles, initCreateTiles, combinationTilesLR, combinationTilesTB ,printInfo} from './tools'
 import { convertD2, convertD1, } from "./convert";
 import { Option } from "./option";
 import { UI } from "./render";
@@ -38,11 +38,12 @@ export class GCC {
     // curInputValue: System.Direction = System.Direction.Nothing;
     // preInputValue: System.Direction = System.Direction.Nothing;
     // historyInputValueList: Array<System.Direction> = new Array<System.Direction>();
+    @printInfo<Step>()
     static addRecord(record: Step) {
         record.index = GCC.history.length
         GCC.history.push(record);
-        console.log(record.index)
-        console.log(record.curData)
+        // console.log(record.index)
+        // console.log(record.curData)
     }
 }
 
