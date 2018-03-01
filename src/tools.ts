@@ -357,10 +357,10 @@ export function createBlank2DArray(rows: number, cols: number, defaultVallue = 0
 }
 
 
-export function printInfo<T>() {
+export function printInfo<T extends { index?: number, curData: any }>() {
     return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
         const method = descriptor.value;
-        descriptor.value = (...args: any[]) => {
+        descriptor.value = (...args: T[]) => {
             let ret: any;
             try {
                 ret = method.apply(target, args);
