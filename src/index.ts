@@ -166,7 +166,7 @@ class Main {
     }
 }
 
-new Main(System.Difficult.Kids);
+new Main(Option.diff);
 
 
 
