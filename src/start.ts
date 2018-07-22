@@ -1,7 +1,7 @@
 import { Main } from "./main";
 import { Difficult } from "./types";
 
-new Main(Difficult.Hard);
+new Main(Difficult.Kids);
 
 
 

@@ -4,7 +4,7 @@
   "descriptionpmn": "",
   "main": "",
   "scripts": {
-    "dev": "tsc webpack.config.ts && webpack-dev-server --open"
+    "start": "tsc webpack.config.ts && webpack-dev-server --open"
   },
   "author": "noberk",
   "license": "ISC",

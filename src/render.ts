@@ -6,7 +6,7 @@ import { Tile, TileSquare, TileInfo } from "./types";
 import { convertD2, convertD1 } from './convert';
 import { Aud } from './audio';
 import { Option } from './option';
-export class UI {
+export class UserInterface {
     private collection: Array<Element> = [];
     private canvasStyle(): void {
         let canvas = document.getElementById('d') as HTMLDivElement;
@@ -146,7 +146,7 @@ export class UI {
         }
 
 
-        var preRoundData = GCC.history[GCC.history.length - 1].curData;
+        var preRoundData = GCC.history[GCC.history.length - 1].value;
         var d2 = convertD2(preRoundData, GCC.tableSize.rows);
 
         var newData: TileInfo[] = [];
@@ -171,10 +171,10 @@ export class UI {
                     break;
             }
             var data = aid(newData, Option.tilesCountBouns);
-            GCC.addRecord({ curData: data, direction: dir });
+            GCC.addRecord({ value: data, direction: dir });
             this.clear(GCC.canvas);
             Aud.play()
-            this.draw(GCC.curRecord().curData)
+            this.draw(GCC.curRecord().value)
             // this.moveTile()
         }
     }

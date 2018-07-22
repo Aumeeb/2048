@@ -3,7 +3,7 @@ import { ColorPan } from './colors'
 import { randomNum, combinationTiles, initCreateTiles, combinationTilesLR, combinationTilesTB ,printInfo} from './tools'
 import { convertD2, convertD1, } from "./convert";
 import { Option } from "./option";
-import { UI } from "./render";
+import { UserInterface } from "./render";
 import { Tile, Size, Step, TileSquare } from "./types";
 
 /** Game control center 游戏控制 ! */
@@ -42,8 +42,7 @@ export class GCC {
     static addRecord(record: Step) {
         record.index = GCC.history.length
         GCC.history.push(record);
-        // console.log(record.index)
-        // console.log(record.curData)
+  
     }
 }
 
@@ -76,13 +75,13 @@ class Player {
 export class Main {
 
     canAnim: boolean = true;
-    ui: UI;
+    ui: UserInterface;
     tileSquare: TileSquare;
     cellArray = new Array<Tile>();
     //开局生成随机多少个瓦片
     constructor(difficult: System.Difficult) {
         this.setDifficult(difficult);
-        this.ui = new UI(GCC.canvas);
+        this.ui = new UserInterface(GCC.canvas);
         this.tileSquare = [];
         this.init();
         this.bindEvent();
@@ -148,13 +147,12 @@ export class Main {
 
     init(): void {
         var initRecord = initCreateTiles(GCC.tableSize.count(), Option.initTileCount, Option.initTileValueRange);
-        GCC.addRecord({ curData: initRecord, direction: System.Direction.Nothing });
-        this.ui.draw(GCC.curRecord().curData)
+        GCC.addRecord({ value: initRecord, direction: System.Direction.Nothing });
+        this.ui.draw(GCC.curRecord().value)
     }
     mouseOver(mouse: MouseEvent): void {
         //   console.log(mouse.x);
     }
-
 
     /**
     * 创建随机数字 2 or 4

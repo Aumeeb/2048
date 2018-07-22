@@ -325,7 +325,7 @@ export function initCreateTiles(length: number, count: number, valuesRange: numb
     let pushCount = 0
     let result: TileInfo[] = [];
     for (let i = 0; i < length; i++) {
-        result.push({ index: i, value: 0, isAid: true })
+        result.push({ index: i, value: 0, isAid: true, previousIndex: undefined })
     }
     while (pushCount < count) {
         var ranNum = randomNum(length)
@@ -375,7 +375,7 @@ export function createBlank2DArray(rows: number, cols: number, defaultVallue = 0
 }
 
 
-export function printInfo<T extends { index?: number, curData: any }>() {
+export function printInfo<T extends System.Step>() {
     return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
         const method = descriptor.value;
         descriptor.value = (...args: T[]) => {
@@ -383,7 +383,7 @@ export function printInfo<T extends { index?: number, curData: any }>() {
             try {
                 ret = method.apply(target, args);
                 console.info(args[0].index);
-                console.info(args[0].curData);
+                console.info(args[0].value);
             } catch (error) {
                 console.error(` 處理錯誤`);
             }

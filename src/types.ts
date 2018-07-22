@@ -31,7 +31,7 @@ export const enum Direction {
     Down = 40,
     Nothing = 0,
     VaildDirection = Left | Up | Right | Down,
-} 
+}
 
 /**
  *there are some beaufully color  
@@ -55,21 +55,23 @@ export interface Point {
     x: number;
     y: number
 }
-export interface TileInfo {
-    value: number;
+export interface ArrayCellAttribute<T> {
+    index?: number;
+    value: T;
+
+}
+export interface TileInfo extends ArrayCellAttribute<number> {
     position?: Point;
-    index: number;
     isAid: boolean;
+    previousIndex: number | undefined
 }
 /** 历史数据 */
-export interface Step {
+export interface Step extends ArrayCellAttribute<TileInfo[]> {
     new?(): Step;
-    index?: number;
     direction: Direction;
-    curData: TileInfo[]
 }
 
-export class Tile {
+export class Tile implements ArrayCellAttribute<number> {
     own: HTMLDivElement = document.createElement('div'); //初始化
     /**
   * 索引
