@@ -9,6 +9,11 @@ npm install
 npm run dev
 
 
+
+# Notice!
+if running ERROR ,  Module build failed: Could not load TypeScript. Try installing with `yarn add typescript` or `npm install typescript`. If TypeScript is installed globally, try using `yarn link typescript` or `npm link typescript`.
+
+
 # you can choise a difficult to start  in the begining
 ```typescript   
 enum Difficult {

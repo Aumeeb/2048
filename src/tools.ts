@@ -1,6 +1,5 @@
 import { Tile, TileInfo } from "./types";
 import * as  System from "./types";
-import { create } from "domain";
 import { Festival } from "./festival";
 
 export function toPath(filename: string, path: string): System.Path {
