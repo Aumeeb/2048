@@ -1,6 +1,7 @@
 import { Tile, TileInfo } from "./types";
 import * as  System from "./types";
 import { Festival } from "./festival";
+import { Option } from "./option";
 
 export function toPath(filename: string, path: string): System.Path {
     return Object.assign(filename, { __pathBrand: path });
@@ -100,6 +101,8 @@ export function combinationTilesLR(table: TileInfo[][], dir: System.Direction, s
         for (const tile of tileRowArr) {
             if (tile.value == 0)
                 continue;
+
+            pointRecord(tile);
             cache.push(tile);
         }
     }
@@ -204,6 +207,11 @@ export function combinationTilesLR(table: TileInfo[][], dir: System.Direction, s
     return blankArr;
 
 }
+
+/**保存上一次所在的索引位置 */
+export function pointRecord(ti: TileInfo) {
+    ti.previousIndex = ti.index;
+}
 export function combinationTilesTB(table: TileInfo[][], dir: System.Direction, scoreBouns = 1): TileInfo[][] {
     var blankArr = createBlank2DArray(table.length, table[0].length);
 
@@ -216,6 +224,8 @@ export function combinationTilesTB(table: TileInfo[][], dir: System.Direction, s
             if (tile.value == 0)
                 continue;
 
+            pointRecord(tile);
+            tile.previousIndex = tile.index;
             cache.push(tile);
         }
     }
@@ -337,7 +347,7 @@ export function initCreateTiles(length: number, count: number, valuesRange: numb
     return result;
 }
 /**額外獎勵方塊 */
-export function aid(data: TileInfo[], count: number = 1): TileInfo[] {
+export function aid(data: TileInfo[], count: number = 1): TileInfo[]  {
     var emptySolt = data.filter(p => p.value == 0)
     var emptySoltCount = emptySolt.length;
 
@@ -352,13 +362,16 @@ export function aid(data: TileInfo[], count: number = 1): TileInfo[] {
     var vaildIndexs = randomRangeIndexs(count, emptySoltCount);
 
     for (const index of vaildIndexs) {
-        data[index].value = 2     //未完成 生成隨即範圍
-        data[index].isAid = true;
-        data[index].index = index;
-    }
 
+        let tile = data[emptySolt[index].index];
+        tile.value = Option.initTileValueRange[0];     //未完成 生成隨即範圍
+        tile.isAid = true;
+        tile.index = index;
+        tile.previousIndex = undefined;
+    }
     return data;
 }
+
 export function initCreateTilesTest() {
     return [4, 4, 4, 0, 2, 2, 4, 4, 2, 2, 2, 2, 4, 2, 4, 4];
 }

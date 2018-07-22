@@ -92,7 +92,7 @@ export class UserInterface {
     public update(previous: TileSquare, next: TileSquare): Boolean {
         return true;
     }
-    clear(canvas: HTMLDivElement): boolean {
+    private clear(canvas: HTMLDivElement): boolean {
         try {
             while (canvas.hasChildNodes()) //当div下还存在子节点时 循环继续
             {
@@ -141,12 +141,12 @@ export class UserInterface {
             keyCode == System.Direction.Up ||
             keyCode == System.Direction.Right ||
             keyCode == System.Direction.Down) {
-        } else {
+        } else
             return;
-        }
 
 
-        var preRoundData = GCC.history[GCC.history.length - 1].value;
+
+        var preRoundData = Object.assign(GCC.history[GCC.history.length - 1].value, {});
         var d2 = convertD2(preRoundData, GCC.tableSize.rows);
 
         var newData: TileInfo[] = [];
@@ -170,6 +170,9 @@ export class UserInterface {
                     dir = System.Direction.Down;
                     break;
             }
+
+            newData.forEach((val, i) => { val.index = i; })  //重新赋值索引
+
             var data = aid(newData, Option.tilesCountBouns);
             GCC.addRecord({ value: data, direction: dir });
             this.clear(GCC.canvas);

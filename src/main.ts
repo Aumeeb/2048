@@ -145,9 +145,11 @@ export class Main {
         return table
     }
 
+    
     init(): void {
+        
         var initRecord = initCreateTiles(GCC.tableSize.count(), Option.initTileCount, Option.initTileValueRange);
-        GCC.addRecord({ value: initRecord, direction: System.Direction.Nothing });
+        GCC.addRecord({ value: initRecord, direction: System.Direction.Nothing, index:0 });
         this.ui.draw(GCC.curRecord().value)
     }
     mouseOver(mouse: MouseEvent): void {

@@ -56,7 +56,7 @@ export interface Point {
     y: number
 }
 export interface ArrayCellAttribute<T> {
-    index?: number;
+    index: number;
     value: T;
 
 }
@@ -66,9 +66,10 @@ export interface TileInfo extends ArrayCellAttribute<number> {
     previousIndex: number | undefined
 }
 /** 历史数据 */
-export interface Step extends ArrayCellAttribute<TileInfo[]> {
-    new?(): Step;
+export interface Step {
     direction: Direction;
+    index?: number;
+    value: TileInfo[];
 }
 
 export class Tile implements ArrayCellAttribute<number> {
@@ -135,3 +136,7 @@ export class Tile implements ArrayCellAttribute<number> {
         }
     }
 }
+
+export type Partial<T> = {
+    [P in keyof T]?: T[P];
+};
