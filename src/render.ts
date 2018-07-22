@@ -1,6 +1,6 @@
 import { GCC } from './main';
 import { ColorPan } from './colors';
-import { combinationTilesLR, combinationTilesTB, aid } from "./tools";
+import { combineTilesRows, combineTilesColumns, aid } from "./tools";
 import * as  System from "./types";
 import { Tile, TileSquare, TileInfo } from "./types";
 import { convertD2, convertD1 } from './convert';
@@ -154,19 +154,19 @@ export class UserInterface {
         if (GCC.user.inputable) {
             switch (keyCode) {
                 case System.Direction.Left:
-                    newData = convertD1(combinationTilesLR(d2, System.Direction.Left))
+                    newData = convertD1(combineTilesRows(d2, System.Direction.Left))
                     dir = System.Direction.Left;
                     break;
                 case System.Direction.Up:
-                    newData = convertD1(combinationTilesTB(d2, System.Direction.Up))
+                    newData = convertD1(combineTilesColumns(d2, System.Direction.Up))
                     dir = System.Direction.Up;
                     break;
                 case System.Direction.Right:
-                    newData = convertD1(combinationTilesLR(d2, System.Direction.Right))
+                    newData = convertD1(combineTilesRows(d2, System.Direction.Right))
                     dir = System.Direction.Right;
                     break;
                 case System.Direction.Down:
-                    newData = convertD1(combinationTilesTB(d2, System.Direction.Down))
+                    newData = convertD1(combineTilesColumns(d2, System.Direction.Down))
                     dir = System.Direction.Down;
                     break;
             }

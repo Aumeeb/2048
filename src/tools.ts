@@ -92,7 +92,7 @@ export function combinationTiles(tileSquare: Tile[][], dir: System.Direction): T
  * @param dir 
  */
 
-export function combinationTilesLR(table: TileInfo[][], dir: System.Direction, scoreBouns = 1): TileInfo[][] {
+export function combineTilesRows(table: TileInfo[][], dir: System.Direction, scoreBouns = 1): TileInfo[][] {
 
     var blankArr = createBlank2DArray(table.length, table[0].length);
 
@@ -212,7 +212,7 @@ export function combinationTilesLR(table: TileInfo[][], dir: System.Direction, s
 export function pointRecord(ti: TileInfo) {
     ti.previousIndex = ti.index;
 }
-export function combinationTilesTB(table: TileInfo[][], dir: System.Direction, scoreBouns = 1): TileInfo[][] {
+export function combineTilesColumns(table: TileInfo[][], dir: System.Direction, scoreBouns = 1): TileInfo[][] {
     var blankArr = createBlank2DArray(table.length, table[0].length);
 
     const colsLength = table[0].length

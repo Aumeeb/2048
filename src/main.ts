@@ -1,6 +1,6 @@
 ﻿import * as  System from "./types";
 import { ColorPan } from './colors'
-import { randomNum, combinationTiles, initCreateTiles, combinationTilesLR, combinationTilesTB ,printInfo} from './tools'
+import { randomNum, combinationTiles, initCreateTiles, combineTilesRows, combineTilesColumns ,printInfo} from './tools'
 import { convertD2, convertD1, } from "./convert";
 import { Option } from "./option";
 import { UserInterface } from "./render";
