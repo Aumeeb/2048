@@ -127,10 +127,10 @@ export function combineTilesRows(table: TileInfo[][], dir: System.Direction, sco
                 }
                 if (vaildDataCache.length >= 2) {
                     var targetRightIndex: number = targetIndex - 1
-                    if (vaildDataCache[targetRightIndex] == vaildDataCache[targetIndex]) {
+                    if (vaildDataCache[targetRightIndex].value == vaildDataCache[targetIndex].value) {
 
                         var target = vaildDataCache[targetRightIndex];
-                        target.value = target.value * target.value * Festival.bouns(target.value);
+                        target.value = Festival.bouns(target.value * target.value);
                         finalCache.push(target)
 
                         vaildDataCache.pop();
@@ -177,7 +177,7 @@ export function combineTilesRows(table: TileInfo[][], dir: System.Direction, sco
                 }
                 if (vaildDataCache.length >= 2) {
                     var targetRightIndex: number = targetIndex + 1
-                    if (vaildDataCache[targetRightIndex] == vaildDataCache[targetIndex]) {
+                    if (vaildDataCache[targetRightIndex].value == vaildDataCache[targetIndex].value) {
 
                         var target = vaildDataCache[targetRightIndex];
                         target.value = target.value * target.value * Festival.bouns(target.value);

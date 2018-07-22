@@ -9,7 +9,12 @@ export const Option = {
     /**初始化方塊的數量 */
     size: { row: 8, col: 8 },
     /**獎勵 */
-    scoreBouns: 2,
+    scoreBouns: {
+        half :0.5,
+        tiny:1.2,
+        double:2,
+        triple:3,
+    }
     /**再下一回合會獎勵方塊的數量 */
     tilesCountBouns: 1,
     /**畫佈的大小 */

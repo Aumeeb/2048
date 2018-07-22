@@ -116,7 +116,6 @@ export class Main {
         }
         GCC.tableSize.rows = finalSideLenOfCell;
         GCC.tableSize.columns = finalSideLenOfCell;
-        // Constpoint = new Table(finalSideLenOfCell, finalSideLenOfCell);
     }
     copyTileSquare(source: TileSquare): TileSquare {
         let target = new Array<Array<Tile>>(GCC.tableSize.rows);
@@ -137,12 +136,12 @@ export class Main {
         for (let i = 0, k = -1; i < cur.length; i++) {
             if (i % GCC.tableSize.rows == 0) {
                 array = new Array<Tile>();
-                k++
+                k++;
             }
             array.push(cur[i]);
             table[k] = array;
         }
-        return table
+        return table;
     }
 
     
