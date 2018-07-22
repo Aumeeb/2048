@@ -1,5 +1,5 @@
 
-import { GCC } from '.'
+import { GCC } from './main'
 export type Path = string & { __pathBrand: any }
 /**
  *  You can choose one of all difficult to start game , each difficult has different cells

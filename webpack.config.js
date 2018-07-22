@@ -7,7 +7,7 @@ var devOption_1 = require("./src/server/devOption");
 autotruck_1.copyResources();
 var config = {
     devtool: 'source-map',
-    entry: ['./src/index.ts'],
+    entry: ['./src/start.ts'],
     output: {
         path: path.resolve(__dirname, devOption_1.dev.outputFolder),
         filename: 'bundle.js'

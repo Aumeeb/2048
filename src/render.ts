@@ -1,6 +1,6 @@
-import { GCC } from '.';
-import { ColorPan, randomHex } from './colors';
-import { randomNum, combinationTilesLR, combinationTilesTB, aid } from "./tools";
+import { GCC } from './main';
+import { ColorPan } from './colors';
+import { combinationTilesLR, combinationTilesTB, aid } from "./tools";
 import * as  System from "./types";
 import { Tile, TileSquare, TileInfo } from "./types";
 import { convertD2, convertD1 } from './convert';
@@ -26,10 +26,10 @@ export class UI {
     /**
      * 最外层的div容器
      */
-    private c: HTMLDivElement;
+    private divCanvas: HTMLDivElement;
     constructor(c: HTMLDivElement) {
-        this.c = c;
-        this.c.tabIndex = 100;
+        this.divCanvas = c;
+        this.divCanvas.tabIndex = 100;
         this.backgroundSkin();
         this.bodyStyle();
         this.canvasStyle();
@@ -38,10 +38,10 @@ export class UI {
     }
 
     private backgroundSkin(): void {
-        this.c.style.backgroundColor = ColorPan.backgroundDivBig;
-        this.c.style.margin = "auto";
-        this.c.style.position = "relative";
-        this.c.style.borderRadius = this.toPx(6)
+        this.divCanvas.style.backgroundColor = ColorPan.backgroundDivBig;
+        this.divCanvas.style.margin = "auto";
+        this.divCanvas.style.position = "relative";
+        this.divCanvas.style.borderRadius = this.toPx(6)
     }
     private colorfulValue(val: number, defaultValue = 2): string {
         switch (val) {
@@ -83,7 +83,7 @@ export class UI {
             let y = singleborderHeight + (singleborderHeight + height) * (Math.floor(i / col));
             element.style.top = this.toPx(y);
 
-            this.c.appendChild(element);
+            this.divCanvas.appendChild(element);
 
         }
     }
@@ -222,7 +222,7 @@ export class UI {
         a.style.fontSize = this.toPx(height / 2.5);
         a.innerText = tile.value.toString();
         eleDiv.appendChild(a);
-        this.c.appendChild(eleDiv);
+        this.divCanvas.appendChild(eleDiv);
 
         return eleDiv;
     }

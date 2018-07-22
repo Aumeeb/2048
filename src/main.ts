@@ -73,7 +73,7 @@ class Player {
 
 /**瓦片*/
 
-class Main {
+export class Main {
 
     canAnim: boolean = true;
     ui: UI;
@@ -166,7 +166,7 @@ class Main {
     }
 }
 
-new Main(Option.diff);
+
 
 
 

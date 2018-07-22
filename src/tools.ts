@@ -27,6 +27,25 @@ export function randomRangeIndexs(count: number, maxRangeValue: number): number[
 
 
 }
+export function digitCounts(k: number, n: number) {
+    if (k == 0 && n == 0) return 1;
+
+    let arr = [], count = 0;
+
+    if (n > 0) arr.push(0)
+
+    for (let i = 1; i <= n; i++) { arr.push(i) }
+
+    for (let i = 0; i <= n; i++) {
+        let nString = arr[i].toString();
+        for (let nlen = 0; nlen <= nString.length - 1; nlen++) {
+            if (k.toString() === nString[nlen]) {
+                count++
+            }
+        }
+    }
+    return count;
+}
 
 export function combinationTiles(tileSquare: Tile[][], dir: System.Direction): Tile[][] {
 
