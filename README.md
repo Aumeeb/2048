@@ -4,6 +4,11 @@ The once popular game 2048, now using Typescript, HTML5 Technology
 # 🧠How to play🧠
 ↑↓←→
 
+# Game Option
+change the parameters in Option.ts file
+
+display : digital mode , emoji mode 
+
 # 🍩Get Started🍩
 1) npm install
 2) npm run start
