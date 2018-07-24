@@ -76,40 +76,15 @@ export class Tile implements TileInfo {
     position?: Point | undefined;
     isAid: boolean = false
     previousIndex: number | undefined;
-    
     own: HTMLDivElement = document.createElement('div'); //初始化
-    /**
-  * 索引
-  */
-    index: number = 0;
-    /**
-    * 数值
-    */
-    value: number = 0;
-    /**
-    * 元素宽度
-    */
-    width: number = 0;
-    /**
-    * 元素高度
-    */
-    height: number = 0;
-    /**
-    * 边框宽度
-    */
-    borderWidth: number = 0;
-    /**
-    * 边框高度
-    */
-    borderHeight: number = 0;
-    /**
-    * 上偏移
-    */
-    top: number = 0;
-    /**
-    * 左偏移
-    */
-    left: number = 0;
+    index: number = 0;//索引
+    value: number = 0;//数值
+    width: number = 0;//元素宽度
+    height: number = 0;//元素高度
+    borderWidth: number = 0; //边框宽度
+    borderHeight: number = 0; //边框高度
+    top: number = 0;//上偏移
+    left: number = 0;//左偏移
 
     currentRowIndex(): number {
         return this.index / GCC.tableSize.columns
