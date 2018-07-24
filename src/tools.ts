@@ -5,6 +5,7 @@ import { Option } from "./option";
 
 
 export function value2emoji(score :number):string{
+    
     //
     switch (score) {
         case 0: return "";
@@ -149,7 +150,7 @@ export function combineTilesRows(table: TileInfo[][], dir: System.Direction, sco
                     if (vaildDataCache[targetRightIndex].value == vaildDataCache[targetIndex].value) {
 
                         var target = vaildDataCache[targetRightIndex];
-                        target.value = Festival.bouns(target.value * target.value);
+                        target.value = target.value * target.value;
                         finalCache.push(target)
 
                         vaildDataCache.pop();
@@ -199,7 +200,7 @@ export function combineTilesRows(table: TileInfo[][], dir: System.Direction, sco
                     if (vaildDataCache[targetRightIndex].value == vaildDataCache[targetIndex].value) {
 
                         var target = vaildDataCache[targetRightIndex];
-                        target.value = target.value * target.value * Festival.bouns(target.value);
+                        target.value = target.value * target.value
                         finalCache.push(target)
 
                         vaildDataCache.shift();
@@ -274,7 +275,7 @@ export function combineTilesColumns(table: TileInfo[][], dir: System.Direction, 
 
 
                         var target = vaildDataCache[targetRightIndex];
-                        target.value = target.value * target.value * Festival.bouns(target.value);
+                        target.value = target.value * target.value 
                         finalCache.push(target)
 
                         vaildDataCache.shift();
@@ -318,7 +319,7 @@ export function combineTilesColumns(table: TileInfo[][], dir: System.Direction, 
                     if (vaildDataCache[targetRightIndex] == vaildDataCache[targetIndex]) {
 
                         var target = vaildDataCache[targetRightIndex];
-                        target.value = target.value * target.value * Festival.bouns(target.value);
+                        target.value = target.value * target.value 
                         finalCache.push(target)
 
                         vaildDataCache.pop();
