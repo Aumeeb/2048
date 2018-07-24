@@ -61,7 +61,8 @@ export interface ArrayCellAttribute<T> {
 
 }
 export interface TileInfo extends ArrayCellAttribute<number> {
-    position?: Point;
+    moveSteps:number;  //需要移动多少步
+    position?: Point;    
     isAid: boolean;
     previousIndex: number | undefined
 }
@@ -73,8 +74,10 @@ export interface Step {
 }
 
 export class Tile implements TileInfo {
+    moveSteps: number=0
     position?: Point | undefined;
     isAid: boolean = false
+    
     previousIndex: number | undefined;
     own: HTMLDivElement = document.createElement('div'); //初始化
     index: number = 0;//索引
