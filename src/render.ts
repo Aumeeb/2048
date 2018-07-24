@@ -1,6 +1,6 @@
 import { GCC } from './main';
 import { ColorPan } from './colors';
-import { combineTilesRows, combineTilesColumns, aid } from "./tools";
+import { combineTilesRows, combineTilesColumns, aid, value2emoji } from "./tools";
 import * as  System from "./types";
 import { Tile, TileSquare, TileInfo } from "./types";
 import { convertD2, convertD1 } from './convert';
@@ -118,7 +118,13 @@ export class UserInterface {
             for (var j = 0; j < array1.length; j++) {
                 array1[j] = new Tile();
                 array1[j].index = tab;
-                array1[j].value = record2D[i][j].value
+                if (Option.emojiMode) {
+                    array1[j].text = value2emoji(record2D[i][j].value);
+                } else {
+                    array1[j].value = record2D[i][j].value
+                    array1[j].text = record2D[i][j].value.toString()
+                }
+
                 tab++;
             }
             tileSquare[i] = array1;
@@ -188,6 +194,7 @@ export class UserInterface {
 
         let index = tile.index;
         let value = tile.value;
+        let text = tile.text;
 
         let color = this.colorfulValue(value);
 
@@ -223,7 +230,7 @@ export class UserInterface {
 
         var a = document.createElement("a");
         a.style.fontSize = this.toPx(height / 2.5);
-        a.innerText = tile.value.toString();
+        a.innerText = text;
         eleDiv.appendChild(a);
         this.divCanvas.appendChild(eleDiv);
 

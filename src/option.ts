@@ -1,6 +1,6 @@
 import * as  System from "./types";
 export const Option = {
-    emojiMode:false,
+    emojiMode:true,
     /**元素id */
     canvasId: 'd',
     /**初始化方塊取值範圍 */
@@ -23,7 +23,11 @@ export const Option = {
         tiger: `🐯`,
         dog: `🐶`,
         mouse: `🐭`,
-        caty:` 🐱`
+        caty:` 🐱`,
+        Monocerus:`🦄`,
+        bee:`🐝`,
+        snake:`🐍`,
+        panda:`🐼`,
     },
     /**再下一回合會獎勵方塊的數量 */
     tilesCountBouns: 1,

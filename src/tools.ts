@@ -3,6 +3,25 @@ import * as  System from "./types";
 import { Festival } from "./festival";
 import { Option } from "./option";
 
+
+export function value2emoji(score :number):string{
+    //
+    switch (score) {
+        case 0: return "";
+        case 2**1: return Option.emoji.dog
+        case 2**2: return Option.emoji.monkey
+        case 2**3: return Option.emoji.mouse
+        case 2**4: return Option.emoji.piggy
+        case 2**5: return Option.emoji.tiger
+        case 2**6: return Option.emoji.caty
+        case 2**7: return Option.emoji.Monocerus
+        case 2**8: return Option.emoji.snake
+        case 2**9: return Option.emoji.bee
+        case 2**10: return Option.emoji.panda
+        default: return Option.emoji.default
+    }
+
+}
 export function toPath(filename: string, path: string): System.Path {
     return Object.assign(filename, { __pathBrand: path });
 }
@@ -327,6 +346,7 @@ export function combineTilesColumns(table: TileInfo[][], dir: System.Direction, 
     }
     return table;
 }
+
 /**初始化獎勵的方塊 */
 export function initCreateTiles(length: number, count: number, valuesRange: number[] = [2, 4]): TileInfo[] {
     if (count > length)

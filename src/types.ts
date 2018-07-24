@@ -79,6 +79,7 @@ export class Tile implements TileInfo {
     own: HTMLDivElement = document.createElement('div'); //初始化
     index: number = 0;//索引
     value: number = 0;//数值
+    text: string= 'undefined'
     width: number = 0;//元素宽度
     height: number = 0;//元素高度
     borderWidth: number = 0; //边框宽度
