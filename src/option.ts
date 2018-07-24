@@ -4,6 +4,7 @@ export const Option = {
     canvasId: 'd',
     /**初始化方塊取值範圍 */
     initTileValueRange: [2, 4, 8, 16, 32, 64, 128, 256],
+    initTileValueRange: [2, 4, 8, 16, 32, 64, 128, 256],
     /**初始化方塊的數量 */
     initTileCount: 1,
     /**初始化方塊的數量 */
@@ -14,7 +15,7 @@ export const Option = {
         tiny:1.2,
         double:2,
         triple:3,
-    }
+    },
     /**再下一回合會獎勵方塊的數量 */
     tilesCountBouns: 1,
     /**畫佈的大小 */
