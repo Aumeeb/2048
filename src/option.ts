@@ -1,9 +1,9 @@
 import * as  System from "./types";
 export const Option = {
+    emojiMode:false,
     /**元素id */
     canvasId: 'd',
     /**初始化方塊取值範圍 */
-    initTileValueRange: [2, 4, 8, 16, 32, 64, 128, 256],
     initTileValueRange: [2, 4, 8, 16, 32, 64, 128, 256],
     /**初始化方塊的數量 */
     initTileCount: 1,
@@ -11,10 +11,19 @@ export const Option = {
     size: { row: 8, col: 8 },
     /**獎勵 */
     scoreBouns: {
-        half :0.5,
-        tiny:1.2,
-        double:2,
-        triple:3,
+        half: 0.5,
+        tiny: 1.2,
+        double: 2,
+        triple: 3,
+    },
+    emoji: {
+        default:`❓`,
+        piggy: `🐷`,
+        monkey: `🐵`,
+        tiger: `🐯`,
+        dog: `🐶`,
+        mouse: `🐭`,
+        caty:` 🐱`
     },
     /**再下一回合會獎勵方塊的數量 */
     tilesCountBouns: 1,
