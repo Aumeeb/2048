@@ -72,7 +72,11 @@ export interface Step {
     value: TileInfo[];
 }
 
-export class Tile implements ArrayCellAttribute<number> {
+export class Tile implements TileInfo {
+    position?: Point | undefined;
+    isAid: boolean = false
+    previousIndex: number | undefined;
+    
     own: HTMLDivElement = document.createElement('div'); //初始化
     /**
   * 索引
@@ -120,8 +124,6 @@ export class Tile implements ArrayCellAttribute<number> {
         else
             return false
     }
-
-
     //更新
     update(): void {
         if (this.own != undefined) {
