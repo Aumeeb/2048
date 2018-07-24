@@ -1,11 +1,12 @@
 ﻿import * as  System from "./types";
-import { randomNum,  initCreateTiles ,printInfo} from './tools'
+import { randomNum, initCreateTiles, printInfo } from './tools'
 import { Option } from "./option";
 import { UserInterface } from "./render";
 import { Tile, Size, Step, TileSquare } from "./types";
 
 /** Game control center 游戏控制 ! */
 export class GCC {
+
     /**画板 */
     static readonly canvas = document.getElementById(Option.canvasId) as HTMLDivElement
     static readonly stage = document.getElementsByTagName('body')[0] as HTMLBodyElement
@@ -19,7 +20,7 @@ export class GCC {
     static readonly animDuration: number = 100
     /**棋盘格 */
     static tableSize: Size = { rows: 0, columns: 0, count: () => GCC.tableSize.rows * GCC.tableSize.columns }
-
+    static isPlayingAnim: boolean;
     static user: UserBehavior = { inputable: true }
     static history: Step[] = [];
     static curRound = () => GCC.history.length;
@@ -40,12 +41,14 @@ export class GCC {
     static addRecord(record: Step) {
         record.index = GCC.history.length
         GCC.history.push(record);
-  
+
     }
 }
 
 interface UserBehavior {
     inputable: boolean
+
+
 
 }
 /**
@@ -85,7 +88,7 @@ export class Main {
         this.bindEvent();
     }
     bindEvent() {
-        GCC.stage.onkeydown = (e) => {this.ui.move(e)}
+        GCC.stage.onkeydown = (e) => { this.ui.move(e) }
         GCC.canvas.onmouseover = this.mouseOver;
     }
     setDifficult(diff: System.Difficult): void {
@@ -142,11 +145,11 @@ export class Main {
         return table;
     }
 
-    
+
     init(): void {
-        
+
         var initRecord = initCreateTiles(GCC.tableSize.count(), Option.initTileCount, Option.initTileValueRange);
-        GCC.addRecord({ value: initRecord, direction: System.Direction.Nothing, index:0 });
+        GCC.addRecord({ value: initRecord, direction: System.Direction.Nothing, index: 0 });
         this.ui.draw(GCC.curRecord().value)
     }
     mouseOver(mouse: MouseEvent): void {
@@ -167,4 +170,3 @@ export class Main {
 
 
 
- 

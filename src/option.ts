@@ -1,6 +1,7 @@
 import * as  System from "./types";
 export const Option = {
-    emojiMode:false,
+    emojiMode: false,
+    animation:true,
     /**元素id */
     canvasId: 'd',
     /**初始化方塊取值範圍 */
@@ -17,17 +18,17 @@ export const Option = {
         triple: 3,
     },
     emoji: {
-        default:`❓`,
+        default: `❓`,
         piggy: `🐷`,
         monkey: `🐵`,
         tiger: `🐯`,
         dog: `🐶`,
         mouse: `🐭`,
-        caty:` 🐱`,
-        Monocerus:`🦄`,
-        bee:`🐝`,
-        snake:`🐍`,
-        panda:`🐼`,
+        caty: ` 🐱`,
+        Monocerus: `🦄`,
+        bee: `🐝`,
+        snake: `🐍`,
+        panda: `🐼`,
     },
     /**再下一回合會獎勵方塊的數量 */
     tilesCountBouns: 1,
@@ -36,9 +37,6 @@ export const Option = {
 
     diff: System.Difficult.Kids,
 
-    animation: {
-        duration: 600,
-        type: "any",
-    }
+ 
 
 }

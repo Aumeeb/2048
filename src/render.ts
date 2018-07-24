@@ -7,6 +7,7 @@ import { convertD2, convertD1 } from './convert';
 import { Aud } from './audio';
 import { Option } from './option';
 export class UserInterface {
+
     private collection: Array<Element> = [];
     private canvasStyle(): void {
         let canvas = document.getElementById('d') as HTMLDivElement;
@@ -106,7 +107,7 @@ export class UserInterface {
         }
         return true
     }
-    public draw(records: TileInfo[]) {
+    public draw(records: TileInfo[], animation?: boolean) {
 
         var record2D = convertD2(records, GCC.tableSize.rows);
 
@@ -133,7 +134,8 @@ export class UserInterface {
         tileSquare.forEach(element => {
             element.forEach(tile => {
                 this.createTile(tile)
-                // this.moveTile(tile,GCC.curRecord().direction)
+                if (animation)
+                    this.moveTile(tile, GCC.curRecord().direction)
             });
         });
 
@@ -182,9 +184,16 @@ export class UserInterface {
             var data = aid(newData, Option.tilesCountBouns);
             GCC.addRecord({ value: data, direction: dir });
             this.clear(GCC.canvas);
-            Aud.play()
-            this.draw(GCC.curRecord().value)
-            // this.moveTile()
+            Aud.play();
+
+            if (GCC.user.inputable) {
+                if (Option.animation) {
+                    this.draw(GCC.curRecord().value,Option.animation);
+                } else {
+                    this.draw(GCC.curRecord().value);
+                }
+            }
+
         }
     }
     public createTile(tile: Tile, row: number = GCC.tableSize.rows, col: number = GCC.tableSize.columns): HTMLDivElement {
