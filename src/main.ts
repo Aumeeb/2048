@@ -47,9 +47,6 @@ export class GCC {
 
 interface UserBehavior {
     inputable: boolean
-
-
-
 }
 /**
  * record users behaviour and operation state 
@@ -60,15 +57,8 @@ class Player {
             console.log('already clicked')
         })
     }
-
-    nextStep = (dir: System.Direction) => {
-
-    }
-    preStep = () => {
-
-    }
-
-
+    nextStep = (dir: System.Direction) => {}
+    preStep = () => {}
 }
 
 /**瓦片*/

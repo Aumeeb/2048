@@ -6,6 +6,7 @@ import { Tile, TileSquare, TileInfo } from "./types";
 import { convertD2, convertD1 } from './convert';
 import { Aud } from './audio';
 import { Option } from './option';
+
 export class UserInterface {
 
     private collection: Array<Element> = [];
@@ -34,7 +35,7 @@ export class UserInterface {
         this.backgroundSkin();
         this.bodyStyle();
         this.canvasStyle();
-        //   this.createBackGroundTail(GCC.canvasWidth, GCC.canvasHeight, GCC.tableSize.rows, GCC.tableSize.columns, "div");
+        this.createBackGroundTail("div");
 
     }
 
@@ -60,15 +61,15 @@ export class UserInterface {
 
         }
     }
-    private createBackGroundTail(canvasWidth: number, canvasHeight: number, row: number, col: number, eleName: string): void {
+    private createBackGroundTail(eleName: string): void {
 
-        let borderWidth = canvasWidth * (1 / 6);
-        let borderHeight = canvasHeight * (1 / 6);
-        let width = (canvasWidth - borderWidth) / col;
-        let height = (canvasHeight - borderHeight) / row;
-        let pieceOfRectangle = row * col;
-        let singleborderWidth = borderWidth / (col + 1);
-        let singleborderHeight = borderHeight / (row + 1);
+        let borderWidth = GCC.canvasWidth * (1 / 6);
+        let borderHeight =  GCC.canvasHeight * (1 / 6);
+        let width = (GCC.canvasWidth - borderWidth) / GCC.tableSize.columns;
+        let height = ( GCC.canvasHeight - borderHeight) / GCC.tableSize.rows;
+        let pieceOfRectangle = GCC.tableSize.rows * GCC.tableSize.columns;
+        let singleborderWidth = borderWidth / (GCC.tableSize.columns + 1);
+        let singleborderHeight = borderHeight / (GCC.tableSize.rows + 1);
 
         for (var i = 0; i < pieceOfRectangle; i++) {
 
@@ -79,9 +80,9 @@ export class UserInterface {
             element.style.borderRadius = this.toPx(10);
             element.style.position = "absolute";
 
-            let x = ((singleborderWidth + ((singleborderWidth + width) * (i % col))));
+            let x = ((singleborderWidth + ((singleborderWidth + width) * (i % GCC.tableSize.columns))));
             element.style.left = this.toPx(x);
-            let y = singleborderHeight + (singleborderHeight + height) * (Math.floor(i / col));
+            let y = singleborderHeight + (singleborderHeight + height) * (Math.floor(i / GCC.tableSize.columns));
             element.style.top = this.toPx(y);
 
             this.divCanvas.appendChild(element);
@@ -102,9 +103,12 @@ export class UserInterface {
                 }
             }
             this.collection = [];
+
+            this.createBackGroundTail('div')
         } catch (e) {
             return false
         }
+        
         return true
     }
     public draw(records: TileInfo[], animation?: boolean) {
@@ -135,7 +139,7 @@ export class UserInterface {
             element.forEach(tile => {
                 this.createTile(tile)
                 if (animation)
-                    this.moveTile(tile, GCC.curRecord().direction)
+                    this.moveTile2(tile, GCC.curRecord().direction)
             });
         });
 
@@ -188,7 +192,7 @@ export class UserInterface {
 
             if (GCC.user.inputable) {
                 if (Option.animation) {
-                    this.draw(GCC.curRecord().value,Option.animation);
+                    this.draw(GCC.curRecord().value, Option.animation);
                 } else {
                     this.draw(GCC.curRecord().value);
                 }
@@ -245,31 +249,69 @@ export class UserInterface {
 
         return eleDiv;
     }
+    delay(time: number): Promise<void> {
+        return new Promise<void>((resovle, reject) => {
+            setTimeout(resovle, time)
+        })
+    }
+    doPromise(action: () => void): Promise<boolean> {
+        return new Promise<boolean>((resovle, reject) => {
+            try {
+                action();
+                resovle(true)
+            } catch (error) {
+                reject(false);
+            }
+        });
+    }
+    moveTile2(tile: Tile, dir: System.Direction): void {
+        let frameRate: number = 60;
+
+        if (dir != null) {
+            if (dir == System.Direction.Left) {
+
+                this.doPromise(
+                    async () => {
+                        Animation.BeginAnim(0, tile.left, tile.borderWidth - tile.left, frameRate, System.AnimationType.linear, tile.own);
+                        await this.delay(GCC.animDuration)
+                        tile.update();
+                    }
+                )
+            }
+            if (dir == System.Direction.Right) {
+
+                // var tileWidth = tile.width + tile.borderWidth;
+                // Animation.BeginAnim(0, tile.left, (tileWidth * (GCC.tableSize.rows - 1)) - (tileWidth * tile.currentColIndex()), frameRate, System.AnimationType.linear, tile.own);
+                // setTimeout(() => {
+                //     tile.update();
+                // }, GCC.animDuration);
+            }
+        }
+
+
+    }
     moveTile(tile: Tile, dir: System.Direction): void {
         let frameRate: number = 60;
 
-        if (tile) {
-            if (dir != null) {
-                if (dir == System.Direction.Left) {
+        if (dir != null) {
+            if (dir == System.Direction.Left) {
 
-                    Animation.BeginAnim(0, tile.left, tile.borderWidth - tile.left, frameRate, System.AnimationType.linear, tile.own);
-                    setTimeout(() => {
-                        tile.update();
-                    }, GCC.animDuration);
-                }
-                if (dir == System.Direction.Right) {
-
-                    var tileWidth = tile.width + tile.borderWidth;
-                    Animation.BeginAnim(0, tile.left, (tileWidth * (GCC.tableSize.rows - 1)) - (tileWidth * tile.currentColIndex()), frameRate, System.AnimationType.linear, tile.own);
-                    setTimeout(() => {
-                        tile.update();
-                    }, GCC.animDuration);
-                }
+                Animation.BeginAnim(0, tile.left, tile.borderWidth - tile.left, frameRate, System.AnimationType.linear, tile.own);
+                setTimeout(() => {
+                    tile.update();
+                }, GCC.animDuration);
             }
+            if (dir == System.Direction.Right) {
 
-        } else {
-            console.log("div不存在");
+                var tileWidth = tile.width + tile.borderWidth;
+                Animation.BeginAnim(0, tile.left, (tileWidth * (GCC.tableSize.rows - 1)) - (tileWidth * tile.currentColIndex()), frameRate, System.AnimationType.linear, tile.own);
+                setTimeout(() => {
+                    tile.update();
+                }, GCC.animDuration);
+            }
         }
+
+
     }
 
 }
