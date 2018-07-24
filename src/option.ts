@@ -1,6 +1,6 @@
 import * as  System from "./types";
 export const Option = {
-    emojiMode:true,
+    emojiMode:false,
     /**元素id */
     canvasId: 'd',
     /**初始化方塊取值範圍 */

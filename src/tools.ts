@@ -271,7 +271,7 @@ export function combineTilesColumns(table: TileInfo[][], dir: System.Direction, 
                 }
                 if (vaildDataCache.length >= 2) {
                     var targetRightIndex: number = targetIndex + 1
-                    if (vaildDataCache[targetRightIndex] == vaildDataCache[targetIndex]) {
+                    if (vaildDataCache[targetRightIndex].value == vaildDataCache[targetIndex].value) {
 
 
                         var target = vaildDataCache[targetRightIndex];
@@ -316,7 +316,7 @@ export function combineTilesColumns(table: TileInfo[][], dir: System.Direction, 
                 }
                 if (vaildDataCache.length >= 2) {
                     var targetRightIndex: number = targetIndex - 1
-                    if (vaildDataCache[targetRightIndex] == vaildDataCache[targetIndex]) {
+                    if (vaildDataCache[targetRightIndex].value == vaildDataCache[targetIndex].value) {
 
                         var target = vaildDataCache[targetRightIndex];
                         target.value = target.value * target.value 

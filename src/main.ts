@@ -1,7 +1,5 @@
 ﻿import * as  System from "./types";
-import { ColorPan } from './colors'
-import { randomNum, combinationTiles, initCreateTiles, combineTilesRows, combineTilesColumns ,printInfo} from './tools'
-import { convertD2, convertD1, } from "./convert";
+import { randomNum,  initCreateTiles ,printInfo} from './tools'
 import { Option } from "./option";
 import { UserInterface } from "./render";
 import { Tile, Size, Step, TileSquare } from "./types";
