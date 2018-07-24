@@ -1,14 +1,12 @@
 # 💎Game 2048 💎
 The once popular game 2048, now using Typescript, HTML5 Technology
 
-# 💎How to play💎
+# 🧠How to play🧠
 ↑↓←→
 
-# step 1
-npm install
-# step 2 
-npm run start
-
+# 🍩Get Started🍩
+1) npm install
+2) npm run start
 
 
 # Notice!
