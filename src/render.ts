@@ -183,7 +183,7 @@ export class UserInterface {
                     break;
             }
 
-            newData.forEach((val, i) => { val.index = i; })  //重新赋值索引
+            newData.forEach((val, i) => { val.index = i; val.isAid=false; })  //重新赋值索引
 
             var data = aid(newData, Option.tilesCountBouns);
             GCC.addRecord({ value: data, direction: dir });

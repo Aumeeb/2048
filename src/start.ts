@@ -1,7 +1,6 @@
 import { Main } from "./main";
-import { Difficult } from "./types";
-
-new Main(Difficult.Normal);
+import { Option } from "./option";
+new Main(Option.diff);
 
 
 

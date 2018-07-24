@@ -356,7 +356,7 @@ export function initCreateTiles(length: number, count: number, valuesRange: numb
     let pushCount = 0
     let result: TileInfo[] = [];
     for (let i = 0; i < length; i++) {
-        result.push({ index: i, value: 0, isAid: true, previousIndex: undefined })
+        result.push({ index: i, value: 0, isAid: false, previousIndex: undefined, moveSteps:0 })
     }
     while (pushCount < count) {
         var ranNum = randomNum(length)
