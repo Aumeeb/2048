@@ -1,7 +1,7 @@
 import * as  System from "./types";
 export const Option = {
-    emojiMode: false,
-    animation:true,
+    emojiMode: true,
+    animation:false,
     /**元素id */
     canvasId: 'd',
     /**初始化方塊取值範圍 */
@@ -35,7 +35,7 @@ export const Option = {
     /**畫佈的大小 */
     resolution: { w: 1200, h: 1200 },
 
-    diff: System.Difficult.Kids,
+    diff: System.Difficult.Normal,
 
  
 

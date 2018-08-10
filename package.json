@@ -5,7 +5,7 @@
   "main": "",
   "scripts": {
     "start": "tsc webpack.config.ts && webpack-dev-server --open",
-    "build":"webpack"
+    "build": "webpack"
   },
   "author": "noberk",
   "license": "ISC",

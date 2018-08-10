@@ -66,7 +66,7 @@ export interface TileInfo extends ArrayCellAttribute<number> {
     isAid: boolean;
     previousIndex: number | undefined
 }
-/** 历史数据 */
+/** history data */
 export interface Step {
     direction: Direction;
     index?: number;
@@ -83,12 +83,12 @@ export class Tile implements TileInfo {
     index: number = 0;//索引
     value: number = 0;//数值
     text: string= 'undefined'
-    width: number = 0;//元素宽度
-    height: number = 0;//元素高度
-    borderWidth: number = 0; //边框宽度
-    borderHeight: number = 0; //边框高度
-    top: number = 0;//上偏移
-    left: number = 0;//左偏移
+    width: number = 0;//tile width
+    height: number = 0;//tile height
+    borderWidth: number = 0; //tile border width
+    borderHeight: number = 0; //tile border height
+    top: number = 0;//offset top
+    left: number = 0;//offset left
 
     currentRowIndex(): number {
         return this.index / GCC.tableSize.columns
