@@ -1,5 +1,5 @@
 # 💎Game 2048 💎
-The once popular game 2048, now using Typescript, HTML5 Technology
+The once popular game 2048, now using Typescript, HTML5 Technology to remaster
 
 # 🧠How to play🧠
 ↑↓←→
