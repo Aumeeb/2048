@@ -12,3 +12,4 @@
   1. Draft a clear **GitHub Commit Summary** (subject line) and **Detailed Description** (commit body) summarizing all changes.
   2. Automatically stage, commit, and push the changes to the remote GitHub repository (`git add -A`, `git commit -m "<summary>" -m "<description>"`, and `git push`).
   3. Include the GitHub commit summary and description in the final response to the user.
+

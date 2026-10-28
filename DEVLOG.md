@@ -18,3 +18,4 @@ Migrated build tooling from Webpack 3 to Vite 8, updated all packages to their l
   - **DOM Diffing (`src/render.ts`)**: Built grid elements once using a `DocumentFragment` and cached values in an `Int32Array` (`prevValues`) so `draw()` only updates DOM nodes whose tile values changed, avoiding full DOM teardown/recreation on every keypress.
   - **1D Board Merge (`src/tools.ts`)**: Unified row and column tile merging into a single-pass `combineTiles()` function operating directly on the 1D board array without intermediate 2D array allocations or `Array.prototype.shift()` calls.
   - **Constant-Time Lookups & Audio Reuse (`src/colors.ts`, `src/tools.ts`, `src/audio.ts`)**: Replaced switch statements with $O(1)$ lookup maps and reused a single preloaded `HTMLAudioElement` instance across moves.
+
