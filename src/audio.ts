@@ -1,19 +1,14 @@
-const path = ''
 class Audios {
-    private audio: HTMLAudioElement = document.createElement('audio');
+    private readonly audio: HTMLAudioElement = new Audio('./audio/updown.mp3');
+
     constructor() {
-        this.audio.src = './audio/updown.mp3';
-    }
-    public play(type?: AudioType) {
-      this.audio = document.createElement('audio');
-      this.audio.src = './audio/updown.mp3';
-      this.audio.play()
+        this.audio.preload = 'auto';
     }
 
-}
-
-enum AudioType {
-    Move
+    public play(): void {
+        this.audio.currentTime = 0;
+        this.audio.play().catch(() => {});
+    }
 }
 
 export const Aud = new Audios();
