@@ -16,7 +16,7 @@ export class UserInterface {
         canvas.style.height = this.toPx(GCC.canvasHeight)
     }
     private bodyStyle(): void {
-        var body = document.getElementsByTagName('body').item(0);
+        var body = document.getElementsByTagName('body').item(0) as HTMLBodyElement;
         body.style.paddingTop = this.toPx(GCC.canvasPaddingTop);
         body.style.opacity = '0.9';
         body.style.background = 'url(./img/huge2.jpg)';
